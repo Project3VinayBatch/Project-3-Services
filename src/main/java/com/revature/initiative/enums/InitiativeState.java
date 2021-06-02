@@ -1,6 +1,6 @@
 package com.revature.initiative.enums;
 
-public enum InititiativeState {
+public enum InitiativeState {
     COMPLETE,
     ACTIVE,
     INACTIVE
