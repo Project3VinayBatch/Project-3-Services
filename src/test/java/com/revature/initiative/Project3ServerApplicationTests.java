@@ -1,4 +1,4 @@
-package com.example.app.project3server;
+package com.revature.initiative;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
