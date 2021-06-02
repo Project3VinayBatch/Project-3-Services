@@ -1,7 +1,7 @@
 node{
    def buildNum = BUILD_NUMBER
   stage("clone"){
-        git url: "https://github.com/Project3VinayBatch/Project-3-Services", branch: 'main'
+        git url: "https://github.com/Project3VinayBatch/Project-3-Services", branch: 'master'
     }
   stage("Build app"){
         sh "chmod +x gradlew"
