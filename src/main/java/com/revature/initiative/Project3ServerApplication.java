@@ -1,4 +1,4 @@
-package com.example.app.project3server;
+package com.revature.initiative;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
