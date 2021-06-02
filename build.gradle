@@ -33,6 +33,7 @@ dependencies {
 	implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.10.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.10.5'
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.10.5'
+	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.1030'
 }
 
 test {
