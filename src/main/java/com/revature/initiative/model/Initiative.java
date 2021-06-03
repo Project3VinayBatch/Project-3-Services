@@ -9,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -44,4 +45,7 @@ public class Initiative {
             joinColumns = @JoinColumn(name="initiative_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     Set<User> members;
+    @OneToMany(mappedBy = "uploadedOn")
+    Set<File> files;
+
 }
