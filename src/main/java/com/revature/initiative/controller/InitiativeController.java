@@ -31,7 +31,6 @@ public class InitiativeController {
 
     @PatchMapping("updatepoc")
     public ResponseEntity<InitiativeDTO> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
-        System.out.println("TITLE = " + initiativeDTO.getTitle() + " POC = " + initiativeDTO.getPointOfContact());
         return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle() , initiativeDTO.getPointOfContact()));
     }
 }
