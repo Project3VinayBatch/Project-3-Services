@@ -1,11 +1,14 @@
 package com.revature.initiative.model;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "files")
 @Data
+@NoArgsConstructor
 public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,8 +17,8 @@ public class File {
     @JoinColumn(name = "uploaded_by", referencedColumnName = "id")
     private User uploadedBy;
     @ManyToOne
-    @JoinColumn(name = "uploaded_on", referencedColumnName = "id")
-    private Initiative uploadedOn;
+    @JoinColumn(name = "initiative_id", referencedColumnName = "id")
+    private Initiative initiativeId;
     @Column(name = "file_name")
     @NotBlank
     private String fileName;

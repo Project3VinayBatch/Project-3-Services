@@ -45,7 +45,7 @@ public class Initiative {
             joinColumns = @JoinColumn(name="initiative_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     Set<User> members;
-    @OneToMany(mappedBy = "uploadedOn")
+    @OneToMany(mappedBy = "initiativeId")
     Set<File> files;
 
 }
