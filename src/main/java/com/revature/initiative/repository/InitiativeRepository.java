@@ -1,4 +1,4 @@
-package com.revature.initiative.repo;
+package com.revature.initiative.repository;
 
 import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.model.Initiative;
