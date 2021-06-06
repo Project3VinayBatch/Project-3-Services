@@ -112,6 +112,7 @@ public class InitiativeServiceImpl implements InitiativeService{
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
+    //This is the one we're using
     @Transactional
     @Override
     public InitiativeDTO setInitiativePOC(String title, long userId) {

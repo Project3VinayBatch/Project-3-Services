@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
@@ -24,11 +25,9 @@ public class Initiative {
     private User createdBy;
     @Column(name = "created_by")
     private Long createdById;
-    @Column(unique = true)
-    @NotBlank
+    @Column(unique = true, nullable = false)
     private String title;
-    @Column
-    @NotBlank
+    @Column(nullable = false)
     @Lob
     private String description;
     @ManyToOne
@@ -36,7 +35,7 @@ public class Initiative {
     private User pointOfContact;
     @Column(name = "point_of_contact")
     private Long pointOfContactId;
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ACTIVE'")
     private InitiativeState state;
