@@ -3,8 +3,8 @@ package com.revature.initiative.service;
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.model.Initiative;
-import com.revature.initiative.repo.InitiativeRepository;
-import com.revature.initiative.repo.UserRepository;
+import com.revature.initiative.repository.InitiativeRepository;
+import com.revature.initiative.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,9 +39,7 @@ public class InitiativeServiceImpl implements InitiativeService{
 
     private static InitiativeDTO initiativeMapDTO(Initiative ent){
         if(ent == null) return null;
-
         InitiativeDTO ret = new InitiativeDTO();
-
         ret.setCreatedBy(ent.getCreatedById());
         ret.setPointOfContact(ent.getPointOfContactId());
         ret.setTitle(ent.getTitle());

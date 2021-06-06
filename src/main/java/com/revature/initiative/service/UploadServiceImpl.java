@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.revature.initiative.exception.InitiativeException;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.model.User;
 import com.revature.initiative.repository.FileRepository;
@@ -25,12 +26,14 @@ import java.io.IOException;
 public class UploadServiceImpl implements UploadService {
 
     private AmazonS3 amazonS3;
-
-    @Autowired
     private UserRepository userRepository;
-    @Autowired
     private FileRepository fileRepository;
 
+    @Autowired
+    public UploadServiceImpl(UserRepository userRepository, FileRepository fileRepository) {
+        this.userRepository = userRepository;
+        this.fileRepository = fileRepository;
+    }
 
     private String endpointUrl = "https://s3.cloudLocation.amazonaws.com";
     @Value("${bucketName}")
@@ -82,21 +85,25 @@ public class UploadServiceImpl implements UploadService {
 
 
     @Override
-    public void uploadFileURLtoDB(String fileURL, String filename, String username, Long initiativeId) {
+    public void uploadFileURLtoDB(String fileURL, String fileName, String username, Long initiativeId) {
         try{
+            String password = "phucsonmy";
             User user=  userRepository.findUsersByUserName(username);
             Initiative initiative= new Initiative();
             initiative.setId(initiativeId);
             com.revature.initiative.model.File file=new com.revature.initiative.model.File();
-            file.setFileURL(fileURL);
-            file.setFileName(filename);
-            file.setInitiativeId(initiative);
-            file.setUploadedBy(user);
-            fileRepository.save(file);
+            //com.revature.initiative.model.File fileTemp = fileRepository.findFileByFileURL(fileURL);
+            //System.out.println(fileTemp.getFileURL());
+            //if(!fileTemp.getFileName().equals(fileName)) {
+                file.setFileURL(fileURL);
+                file.setFileName(fileName);
+                file.setInitiativeId(initiative);
+                file.setUploadedBy(user);
+                fileRepository.save(file);
+           // }
         }catch(NullPointerException e){
             e.printStackTrace();
         }
-
     }
 
     }
