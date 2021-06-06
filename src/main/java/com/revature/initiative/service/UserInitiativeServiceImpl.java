@@ -1,5 +1,6 @@
 package com.revature.initiative.service;
 
+import com.revature.initiative.exceptions.DuplicateEntity;
 import com.revature.initiative.model.UserInitiative;
 import com.revature.initiative.repository.UserInitiativesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +17,11 @@ public class UserInitiativeServiceImpl implements UserInitiativeService{
     }
 
     @Override
-    public void signUp(Long userId, Long initiativeId) {
+    public void signUp(Long userId, Long initiativeId) throws DuplicateEntity {
         if(userInitiativesRepository.findByinitiativeIdAndUserId(initiativeId, userId) == null){
             userInitiativesRepository.save(new UserInitiative(initiativeId, userId));
         }else {
-            //todo create error
+            throw new DuplicateEntity();
         }
     }
 

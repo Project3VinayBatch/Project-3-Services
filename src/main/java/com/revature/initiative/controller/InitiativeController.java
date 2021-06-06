@@ -1,6 +1,7 @@
 package com.revature.initiative.controller;
 
 import com.revature.initiative.dto.InitiativeDTO;
+import com.revature.initiative.exceptions.DuplicateEntity;
 import com.revature.initiative.model.UserInitiative;
 import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.UserInitiativeService;
@@ -33,14 +34,19 @@ public class InitiativeController {
         return ResponseEntity.ok(initiativeService.getInitiatives());
     }
 
-    @PostMapping("initiative/signup/{:userId}/{:initiativeId}")
+    @PostMapping("initiative/signup/{userId}/{initiativeId}")
     public ResponseEntity signUp(long userId, long initiativeId){
-        userInitiativeService.signUp(userId, initiativeId);
+        try {
+            userInitiativeService.signUp(userId, initiativeId);
+        } catch (DuplicateEntity duplicateEntity) {
+            ResponseEntity.BodyBuilder ret = ResponseEntity.badRequest();
+            ret.body("ERROR: relation already exists");
+        }
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping("initiative/signup/{:userId}/{:initiativeId}")
-    public ResponseEntity remove(long userId, long initiativeId){
+    @DeleteMapping("initiative/signup/{userId}/{initiativeId}")
+    public ResponseEntity signOff(long userId, long initiativeId){
         userInitiativeService.remove(userId, initiativeId);
         return ResponseEntity.ok(null);
     }
