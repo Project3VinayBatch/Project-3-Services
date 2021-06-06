@@ -25,7 +25,7 @@ public class Initiative {
     private User createdBy;
     @Column(name = "created_by")
     private Long createdById;
-    @Column
+    @Column(unique = true)
     @NotBlank
     private String title;
     @Column

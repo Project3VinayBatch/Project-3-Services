@@ -7,6 +7,7 @@ import com.revature.initiative.repository.InitiativeRepository;
 import com.revature.initiative.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,6 +92,7 @@ public class InitiativeServiceImpl implements InitiativeService{
         return initiativeMapDTO(initiativeRepository.findByState(state));
     }
 
+    @Transactional
     @Override
     public InitiativeDTO setInitiativePOC(long initId, long userId) {
         Initiative ent = initiativeRepository.findById(initId).get();
@@ -99,6 +101,7 @@ public class InitiativeServiceImpl implements InitiativeService{
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
+    @Transactional
     @Override
     public InitiativeDTO setInitiativePOC(long initId, String username) {
         Initiative ent = initiativeRepository.findById(initId).get();
@@ -107,6 +110,7 @@ public class InitiativeServiceImpl implements InitiativeService{
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
+    @Transactional
     @Override
     public InitiativeDTO setInitiativePOC(String title, long userId) {
         Initiative ent = initiativeRepository.findByTitle(title);
@@ -115,6 +119,7 @@ public class InitiativeServiceImpl implements InitiativeService{
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
+    @Transactional
     @Override
     public InitiativeDTO setInitiativePOC(String title, String username) {
         Initiative ent = initiativeRepository.findByTitle(title);

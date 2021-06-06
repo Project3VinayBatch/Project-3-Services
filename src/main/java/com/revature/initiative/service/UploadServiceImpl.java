@@ -105,5 +105,4 @@ public class UploadServiceImpl implements UploadService {
             e.printStackTrace();
         }
     }
-
     }
