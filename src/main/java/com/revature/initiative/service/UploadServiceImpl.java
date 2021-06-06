@@ -92,15 +92,15 @@ public class UploadServiceImpl implements UploadService {
             Initiative initiative= new Initiative();
             initiative.setId(initiativeId);
             com.revature.initiative.model.File file=new com.revature.initiative.model.File();
-            //com.revature.initiative.model.File fileTemp = fileRepository.findFileByFileURL(fileURL);
-            //System.out.println(fileTemp.getFileURL());
-            //if(!fileTemp.getFileName().equals(fileName)) {
+            com.revature.initiative.model.File fileTemp = fileRepository.findFileByFileURL(fileURL);
+            System.out.println(fileTemp.getFileURL());
+            if(!fileTemp.getFileURL().equals(fileURL) && !fileTemp.getUploadedBy().equals(user.getId()) && !fileTemp.getInitiativeId().equals(initiativeId)){
                 file.setFileURL(fileURL);
                 file.setFileName(fileName);
                 file.setInitiativeId(initiative);
                 file.setUploadedBy(user);
                 fileRepository.save(file);
-           // }
+            }
         }catch(NullPointerException e){
             e.printStackTrace();
         }
