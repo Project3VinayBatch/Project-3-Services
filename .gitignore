@@ -4,7 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-!**/secret.properties
+**/secret*
 
 ### STS ###
 .apt_generated
@@ -39,3 +39,5 @@ out/
 
 
 E:\Project 3\Project-3-Services\src\main\resources\secret.properties
+=======
+.vscode/
