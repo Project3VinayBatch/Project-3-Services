@@ -2,6 +2,7 @@ package com.revature.initiative.service;
 
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.enums.InitiativeState;
+import com.revature.initiative.exception.EmptyEntity;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.repository.InitiativeRepository;
 import com.revature.initiative.repository.UserRepository;
@@ -11,9 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
-public class InitiativeServiceImpl implements InitiativeService{
+public class InitiativeServiceImpl implements InitiativeService {
 
     private final InitiativeRepository initiativeRepository;
     private final UserRepository userRepository;
@@ -24,8 +26,8 @@ public class InitiativeServiceImpl implements InitiativeService{
         this.userRepository = userRepository;
     }
 
-    private static Initiative initiativeMapENT(InitiativeDTO ent){
-        if(ent == null) return null;
+    private static Initiative initiativeMapENT(InitiativeDTO ent) {
+        if (ent == null) return null;
 
         Initiative ret = new Initiative();
 
@@ -38,8 +40,8 @@ public class InitiativeServiceImpl implements InitiativeService{
         return ret;
     }
 
-    private static InitiativeDTO initiativeMapDTO(Initiative ent){
-        if(ent == null) return null;
+    private static InitiativeDTO initiativeMapDTO(Initiative ent) {
+        if (ent == null) return null;
         InitiativeDTO ret = new InitiativeDTO();
         ret.setCreatedBy(ent.getCreatedById());
         ret.setPointOfContact(ent.getPointOfContactId());
@@ -51,30 +53,31 @@ public class InitiativeServiceImpl implements InitiativeService{
         return ret;
     }
 
-    private static List<Initiative> initiativeMapENT(List<InitiativeDTO> ent){
+    private static List<Initiative> initiativeMapENT(List<InitiativeDTO> ent) {
         List<Initiative> ret = new ArrayList<>();
 
-        for (InitiativeDTO i: ent) ret.add(initiativeMapENT(i));
+        for (InitiativeDTO i : ent) ret.add(initiativeMapENT(i));
 
         return ret;
     }
 
-    private static List<InitiativeDTO> initiativeMapDTO(List<Initiative> ent){
+    private static List<InitiativeDTO> initiativeMapDTO(List<Initiative> ent) {
         List<InitiativeDTO> ret = new ArrayList<>();
 
-        for (Initiative i: ent) ret.add(initiativeMapDTO(i));
+        for (Initiative i : ent) ret.add(initiativeMapDTO(i));
 
         return ret;
     }
 
     @Override
     public InitiativeDTO addInitiative(InitiativeDTO init) {
+        if(init == null) throw new EmptyEntity();
         return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
     }
 
     @Override
     public InitiativeDTO getInitiative(long id) {
-        return initiativeMapDTO(initiativeRepository.findById(id).get());
+        return initiativeMapDTO(initiativeRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
     @Override
@@ -95,8 +98,7 @@ public class InitiativeServiceImpl implements InitiativeService{
     @Transactional
     @Override
     public InitiativeDTO setInitiativePOC(long initId, long userId) {
-        Initiative ent = initiativeRepository.findById(initId).get();
-        if(ent==null) return null;
+        Initiative ent = initiativeRepository.findById(initId).orElseThrow(NoSuchElementException::new);
         ent.setPointOfContactId(userId);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
@@ -104,8 +106,7 @@ public class InitiativeServiceImpl implements InitiativeService{
     @Transactional
     @Override
     public InitiativeDTO setInitiativePOC(long initId, String username) {
-        Initiative ent = initiativeRepository.findById(initId).get();
-        if(ent==null) return null;
+        Initiative ent = initiativeRepository.findById(initId).orElseThrow(NoSuchElementException::new);
         ent.setPointOfContactId(userRepository.findByuserName(username).getId());
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
@@ -114,7 +115,7 @@ public class InitiativeServiceImpl implements InitiativeService{
     @Override
     public InitiativeDTO setInitiativePOC(String title, long userId) {
         Initiative ent = initiativeRepository.findByTitle(title);
-        if(ent==null) return null;
+        if (ent == null) return null;
         ent.setPointOfContactId(userId);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
@@ -123,7 +124,7 @@ public class InitiativeServiceImpl implements InitiativeService{
     @Override
     public InitiativeDTO setInitiativePOC(String title, String username) {
         Initiative ent = initiativeRepository.findByTitle(title);
-        if(ent==null) return null;
+        if (ent == null) return null;
         ent.setPointOfContactId(userRepository.findByuserName(username).getId());
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
