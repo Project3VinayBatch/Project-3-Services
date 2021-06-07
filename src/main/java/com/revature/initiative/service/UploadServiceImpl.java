@@ -25,14 +25,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Objects;
 
 @Service
 public class UploadServiceImpl implements UploadService {
 
     private AmazonS3 amazonS3;
-    private UserRepository userRepository;
-    private FileRepository fileRepository;
-    private InitiativeRepository initiativeRepository;
+    private final UserRepository userRepository;
+    private final FileRepository fileRepository;
+    private final InitiativeRepository initiativeRepository;
 
     @Autowired
     public UploadServiceImpl(UserRepository userRepository, FileRepository fileRepository, InitiativeRepository initiativeRepository) {
@@ -42,7 +43,6 @@ public class UploadServiceImpl implements UploadService {
 
     }
 
-    private String endpointUrl = "https://s3.cloudLocation.amazonaws.com";
     @Value("${bucketName}")
     private String bucketName;
     @Value("${accessKey}")
@@ -67,6 +67,7 @@ public class UploadServiceImpl implements UploadService {
         try {
             File file = convertMultipartFileToFile(multipartFile);
             String fileName = multipartFile.getOriginalFilename();
+            String endpointUrl = "https://s3.cloudLocation.amazonaws.com";
             fileURL = endpointUrl + "/" + bucketName + "/" + fileName;
             uploadFileURLtoDB(fileURL, fileName, username, initiativeId);
             uploadFileToBucket(fileName, file);
@@ -77,8 +78,8 @@ public class UploadServiceImpl implements UploadService {
         return fileURL;
     }
 
-    private File convertMultipartFileToFile(MultipartFile file) throws IOException {
-        File convertedFile = new File(file.getOriginalFilename());
+    private File convertMultipartFileToFile(MultipartFile file) {
+        File convertedFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
             fos.write(file.getBytes());
         } catch (IOException e) {

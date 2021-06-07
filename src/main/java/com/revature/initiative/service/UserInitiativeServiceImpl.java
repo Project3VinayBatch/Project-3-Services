@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserInitiativeServiceImpl implements UserInitiativeService {
 
-    private UserInitiativesRepository userInitiativesRepository;
+    private final UserInitiativesRepository userInitiativesRepository;
 
     @Autowired
     public UserInitiativeServiceImpl(UserInitiativesRepository userInitiativesRepository) {

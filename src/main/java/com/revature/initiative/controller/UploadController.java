@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "http://localhost:4200")
 @Controller
 public class UploadController {
-    private UploadService amazonS3BucketService;
+    private final UploadService amazonS3BucketService;
 
     @Autowired
     public UploadController(UploadService amazonS3BucketService) {

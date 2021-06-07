@@ -13,8 +13,8 @@ import java.util.List;
 @RestController
 public class InitiativeController {
 
-    private InitiativeService initiativeService;
-    private UserInitiativeService userInitiativeService;
+    private final InitiativeService initiativeService;
+    private final UserInitiativeService userInitiativeService;
 
     @Autowired
     public InitiativeController(InitiativeService initiativeService, UserInitiativeService userInitiativeService) {
