@@ -45,8 +45,8 @@ public class InitiativeController {
         try {
             userInitiativeService.signUp(userId, initiativeId);
         } catch (DuplicateEntity duplicateEntity) {
-            ResponseEntity.BodyBuilder ret = ResponseEntity.badRequest();
-            ret.body("ERROR: relation already exists");
+            return ResponseEntity.badRequest()
+                    .body("ERROR: relation already exists");
         }
         return ResponseEntity.ok(null);
     }
