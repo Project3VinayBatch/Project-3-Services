@@ -40,9 +40,7 @@ public class InitiativeServiceImpl implements InitiativeService{
 
     private static InitiativeDTO initiativeMapDTO(Initiative ent){
         if(ent == null) return null;
-
         InitiativeDTO ret = new InitiativeDTO();
-
         ret.setCreatedBy(ent.getCreatedById());
         ret.setPointOfContact(ent.getPointOfContactId());
         ret.setTitle(ent.getTitle());

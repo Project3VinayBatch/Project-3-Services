@@ -1,6 +1,7 @@
 package com.revature.initiative.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "user_initiatives")
 @Data
+@NoArgsConstructor
 public class UserInitiative {
     @Id
     private Long id;
