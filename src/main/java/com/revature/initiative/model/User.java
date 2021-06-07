@@ -6,7 +6,6 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Set;
 
@@ -18,11 +17,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    @NotBlank
+    @Column(nullable = false)
     private String userName;
-    @Column
-    @NotBlank
+    @Column(nullable = false)
     private String password;
     @Column
     @Enumerated(EnumType.STRING)

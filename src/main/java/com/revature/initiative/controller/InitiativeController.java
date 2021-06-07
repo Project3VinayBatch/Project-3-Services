@@ -1,6 +1,8 @@
 package com.revature.initiative.controller;
 
 import com.revature.initiative.dto.InitiativeDTO;
+import com.revature.initiative.exception.InvalidTitleException;
+import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.exception.DuplicateEntity;
 import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.UserInitiativeService;
@@ -23,8 +25,13 @@ public class InitiativeController {
     }
 
     @PostMapping("initiative")
-    public ResponseEntity<InitiativeDTO> createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
-        return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
+    public ResponseEntity<Object> createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
+        try {
+            return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
+        } catch (InvalidTitleException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping("initiatives")
@@ -33,8 +40,13 @@ public class InitiativeController {
     }
 
     @PatchMapping("updatepoc")
-    public ResponseEntity<InitiativeDTO> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
-        return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle(), initiativeDTO.getPointOfContact()));
+    public ResponseEntity<Object> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
+        try {
+            return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle(), initiativeDTO.getPointOfContact()));
+        } catch (UserNotFoundException | InvalidTitleException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @PostMapping("initiative/signup/{userId}/{initiativeId}")

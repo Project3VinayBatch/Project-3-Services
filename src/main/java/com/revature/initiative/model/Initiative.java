@@ -26,11 +26,9 @@ public class Initiative {
     @Column(name = "created_by")
     @NotNull
     private Long createdById;
-    @Column(unique = true)
-    @NotBlank
+    @Column(unique = true, nullable = false)
     private String title;
-    @Column
-    @NotBlank
+    @Column(nullable = false)
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String description;
