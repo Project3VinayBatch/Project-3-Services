@@ -7,9 +7,10 @@ import java.util.List;
 public interface FileService {
 
     List<FileDTO> getFiles();
-    List<FileDTO> getFilesByUsername(String userName);
-    List<FileDTO> getFilesByInitiativeId(Long initiativeId);
 
+    List<FileDTO> getFilesByUsername(String userName);
+
+    List<FileDTO> getFilesByInitiativeId(Long initiativeId);
 
 
 }

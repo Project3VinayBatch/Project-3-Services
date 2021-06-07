@@ -13,6 +13,8 @@ import java.util.List;
 public interface FileRepository extends JpaRepository<File, Integer> {
 
     File findFileByFileURLAndInitiativeIdAndUploadedBy(String fileName, Initiative initiative, User user);
+
     List<File> findAllByUploadedById(Long id);
+
     List<File> findAllByFileInitiativeId(Long id);
 }

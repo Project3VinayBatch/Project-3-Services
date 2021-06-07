@@ -38,7 +38,7 @@ public class InitiativeController {
     }
 
     @PostMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity<Object> signUp(long userId, long initiativeId) {
+    public ResponseEntity<Object> signUp(@PathVariable Long userId, @PathVariable Long initiativeId) {
         try {
             userInitiativeService.signUp(userId, initiativeId);
         } catch (DuplicateEntity duplicateEntity) {
@@ -49,7 +49,7 @@ public class InitiativeController {
     }
 
     @DeleteMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity<Object> signOff(long userId, long initiativeId) {
+    public ResponseEntity<Object> signOff(@PathVariable Long userId, @PathVariable Long initiativeId) {
         userInitiativeService.remove(userId, initiativeId);
         return ResponseEntity.ok(null);
     }

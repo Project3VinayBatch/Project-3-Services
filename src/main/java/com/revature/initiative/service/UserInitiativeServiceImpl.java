@@ -27,6 +27,9 @@ public class UserInitiativeServiceImpl implements UserInitiativeService {
 
     @Override
     public void remove(long userId, long initiativeId) {
-        userInitiativesRepository.deleteByinitiativeIdAndUserId(userId, initiativeId);
+        UserInitiative userInit = userInitiativesRepository.findByinitiativeIdAndUserId(initiativeId, userId);
+        if (userInit != null) {
+            userInitiativesRepository.deleteById(userInit.getId());
+        }
     }
 }

@@ -71,7 +71,7 @@ public class InitiativeServiceImpl implements InitiativeService {
 
     @Override
     public InitiativeDTO addInitiative(InitiativeDTO init) {
-        if(init == null) throw new EmptyEntity();
+        if (init == null) throw new EmptyEntity();
         return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
     }
 

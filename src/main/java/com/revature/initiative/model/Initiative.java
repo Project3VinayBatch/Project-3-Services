@@ -2,16 +2,17 @@ package com.revature.initiative.model;
 
 import com.revature.initiative.enums.InitiativeState;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.Set;
 
+@DynamicInsert
 @Entity
 @Table(name = "initiatives")
 @Data
@@ -23,6 +24,7 @@ public class Initiative {
     @JoinColumn(name = "created_by", referencedColumnName = "id", insertable = false, updatable = false)
     private User createdBy;
     @Column(name = "created_by")
+    @NotNull
     private Long createdById;
     @Column(unique = true)
     @NotBlank
@@ -37,7 +39,7 @@ public class Initiative {
     private User pointOfContact;
     @Column(name = "point_of_contact")
     private Long pointOfContactId;
-    @Column(nullable = false)
+    @Column
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ACTIVE'")
     private InitiativeState state;
@@ -49,10 +51,9 @@ public class Initiative {
     private Date updatedAt;
     @ManyToMany
     @JoinTable(name = "user_initiatives",
-            joinColumns = @JoinColumn(name = "initiative_id", insertable = false, updatable = false),
-            inverseJoinColumns = @JoinColumn(name = "user_id", insertable = false, updatable = false))
+            joinColumns = @JoinColumn(name = "initiative_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     Set<User> members;
     @OneToMany(mappedBy = "initiativeId")
     Set<File> files;
-
 }
