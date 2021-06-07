@@ -2,6 +2,7 @@ package com.revature.initiative.controller;
 
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.exception.InvalidTitleException;
+import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.exceptions.DuplicateEntity;
 import com.revature.initiative.model.UserInitiative;
 import com.revature.initiative.service.InitiativeService;
@@ -27,7 +28,7 @@ public class InitiativeController {
     }
 
     @PostMapping("initiative")
-    public ResponseEntity createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
+    public ResponseEntity<Object> createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
         try {
             return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
         } catch (InvalidTitleException e) {
@@ -42,12 +43,17 @@ public class InitiativeController {
     }
 
     @PatchMapping("updatepoc")
-    public ResponseEntity<InitiativeDTO> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
-        return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle(), initiativeDTO.getPointOfContact()));
+    public ResponseEntity<Object> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
+        try {
+            return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle(), initiativeDTO.getPointOfContact()));
+        } catch (UserNotFoundException | InvalidTitleException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @PostMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity signUp(long userId, long initiativeId){
+    public ResponseEntity<Object> signUp(long userId, long initiativeId){
         try {
             userInitiativeService.signUp(userId, initiativeId);
         } catch (DuplicateEntity duplicateEntity) {
@@ -58,7 +64,7 @@ public class InitiativeController {
     }
 
     @DeleteMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity signOff(long userId, long initiativeId){
+    public ResponseEntity<Object> signOff(long userId, long initiativeId){
         userInitiativeService.remove(userId, initiativeId);
         return ResponseEntity.ok(null);
     }

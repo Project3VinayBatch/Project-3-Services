@@ -3,7 +3,9 @@ package com.revature.initiative.service;
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.exception.InvalidTitleException;
+import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.model.Initiative;
+import com.revature.initiative.model.User;
 import com.revature.initiative.repository.InitiativeRepository;
 import com.revature.initiative.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,15 +78,17 @@ public class InitiativeServiceImpl implements InitiativeService{
         try {
             return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
-            throw new InvalidTitleException("ERROR: Title already exists");
+            throw new InvalidTitleException("ERROR: title already exists");
         }
     }
 
+    @Transactional
     @Override
     public InitiativeDTO getInitiative(long id) {
         return initiativeMapDTO(initiativeRepository.findById(id).get());
     }
 
+    @Transactional
     @Override
     public InitiativeDTO getInitiative(String title) {
         return initiativeMapDTO(initiativeRepository.findByTitle(title));
@@ -123,7 +127,10 @@ public class InitiativeServiceImpl implements InitiativeService{
     @Override
     public InitiativeDTO setInitiativePOC(String title, long userId) {
         Initiative ent = initiativeRepository.findByTitle(title);
-        if(ent==null) return null;
+        User user = userRepository.findUserById(userId);
+
+        if(user==null) throw new UserNotFoundException("ERROR: user does not exist");
+        if(ent==null) throw new InvalidTitleException("ERROR: title does not exist");
         ent.setPointOfContactId(userId);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
