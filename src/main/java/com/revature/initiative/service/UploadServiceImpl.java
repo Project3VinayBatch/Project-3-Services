@@ -101,14 +101,14 @@ public class UploadServiceImpl implements UploadService {
             com.revature.initiative.model.File file=new com.revature.initiative.model.File();
             com.revature.initiative.model.File fileTemp = fileRepository.findFileByFileURLAndInitiativeIdAndUploadedBy(fileURL, initiative, user);
             //com.revature.initiative.model.File fileTemp = file
-            if(fileTemp ==null) {
+            if(fileTemp == null) {
                 file.setFileURL(fileURL);
                 file.setFileName(fileName);
-                file.setInitiativeId(initiative);
-                file.setUploadedBy(user);
+                file.setFileInitiativeId(initiative.getId());
+                file.setUploadedById(user.getId());
                 fileRepository.save(file);
             }else{
-                throw new FileException("FileURL is already existed in the database");
+                throw new FileException("FileURL already exists the database");
             }
         }catch(NullPointerException e){
             e.printStackTrace();
