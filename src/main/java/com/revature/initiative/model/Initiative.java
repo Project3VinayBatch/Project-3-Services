@@ -6,12 +6,10 @@ import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -51,7 +49,7 @@ public class Initiative {
     private Date updatedAt;
     @ManyToMany
     @JoinTable(name = "user_initiatives",
-            joinColumns = @JoinColumn(name="initiative_id", insertable = false, updatable = false),
+            joinColumns = @JoinColumn(name = "initiative_id", insertable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "user_id", insertable = false, updatable = false))
     Set<User> members;
     @OneToMany(mappedBy = "initiativeId")
