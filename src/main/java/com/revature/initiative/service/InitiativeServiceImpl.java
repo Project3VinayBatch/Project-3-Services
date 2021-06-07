@@ -2,6 +2,7 @@ package com.revature.initiative.service;
 
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.enums.InitiativeState;
+import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.repository.InitiativeRepository;
 import com.revature.initiative.repository.UserRepository;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,7 +73,11 @@ public class InitiativeServiceImpl implements InitiativeService{
 
     @Override
     public InitiativeDTO addInitiative(InitiativeDTO init) {
-        return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
+        try {
+            return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
+        } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            throw new InvalidTitleException("ERROR: Title already exists");
+        }
     }
 
     @Override

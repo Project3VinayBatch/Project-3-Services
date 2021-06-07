@@ -1,6 +1,7 @@
 package com.revature.initiative.controller;
 
 import com.revature.initiative.dto.InitiativeDTO;
+import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.exceptions.DuplicateEntity;
 import com.revature.initiative.model.UserInitiative;
 import com.revature.initiative.service.InitiativeService;
@@ -26,8 +27,13 @@ public class InitiativeController {
     }
 
     @PostMapping("initiative")
-    public ResponseEntity<InitiativeDTO> createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
-        return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
+    public ResponseEntity createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
+        try {
+            return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
+        } catch (InvalidTitleException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping("initiatives")
