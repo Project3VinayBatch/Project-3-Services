@@ -15,11 +15,15 @@ public class File {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "uploaded_by", referencedColumnName = "id")
+    @JoinColumn(name = "uploaded_by", referencedColumnName = "id", insertable = false, updatable = false)
     private User uploadedBy;
+    @Column(name = "uploaded_by")
+    private Long uploadedById;
     @ManyToOne
-    @JoinColumn(name = "initiative_id", referencedColumnName = "id")
+    @JoinColumn(name = "initiative_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Initiative initiativeId;
+    @Column(name = "initiative_id")
+    private Long fileInitiativeId;
     @Column(name = "file_name")
     @NotBlank
     private String fileName;
