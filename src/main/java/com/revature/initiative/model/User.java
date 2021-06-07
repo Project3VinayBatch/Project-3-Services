@@ -3,10 +3,13 @@ package com.revature.initiative.model;
 import com.revature.initiative.enums.Role;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.Set;
 
+@DynamicInsert
 @Entity
 @Table(name = "users")
 @Data
@@ -18,7 +21,7 @@ public class User {
     private String userName;
     @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
+    @Column
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'USER'")
     private Role role;

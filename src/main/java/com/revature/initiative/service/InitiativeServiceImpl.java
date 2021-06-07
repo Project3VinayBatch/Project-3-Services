@@ -83,13 +83,11 @@ public class InitiativeServiceImpl implements InitiativeService {
         }
     }
 
-    @Transactional
     @Override
     public InitiativeDTO getInitiative(long id) {
         return initiativeMapDTO(initiativeRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
-    @Transactional
     @Override
     public InitiativeDTO getInitiative(String title) {
         return initiativeMapDTO(initiativeRepository.findByTitle(title));

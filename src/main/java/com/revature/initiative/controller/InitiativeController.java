@@ -9,13 +9,14 @@ import com.revature.initiative.service.UserInitiativeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
 public class InitiativeController {
 
-    private InitiativeService initiativeService;
-    private UserInitiativeService userInitiativeService;
+    private final InitiativeService initiativeService;
+    private final UserInitiativeService userInitiativeService;
 
     @Autowired
     public InitiativeController(InitiativeService initiativeService, UserInitiativeService userInitiativeService) {
@@ -49,7 +50,7 @@ public class InitiativeController {
     }
 
     @PostMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity<Object> signUp(long userId, long initiativeId){
+    public ResponseEntity<Object> signUp(@PathVariable Long userId, @PathVariable Long initiativeId) {
         try {
             userInitiativeService.signUp(userId, initiativeId);
         } catch (DuplicateEntity duplicateEntity) {
@@ -60,7 +61,7 @@ public class InitiativeController {
     }
 
     @DeleteMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity<Object> signOff(long userId, long initiativeId){
+    public ResponseEntity<Object> signOff(@PathVariable Long userId, @PathVariable Long initiativeId) {
         userInitiativeService.remove(userId, initiativeId);
         return ResponseEntity.ok(null);
     }
