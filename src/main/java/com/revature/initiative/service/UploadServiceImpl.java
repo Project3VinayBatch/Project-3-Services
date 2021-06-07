@@ -62,7 +62,7 @@ public class UploadServiceImpl implements UploadService {
     }
 
     @Override
-    public String uploadFile(MultipartFile multipartFile, String username, Long initiativeId) {
+    public String uploadFile(MultipartFile multipartFile,String username, Long initiativeId) {
         String fileURL = "";
         try {
             File file = convertMultipartFileToFile(multipartFile);
@@ -96,28 +96,28 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     public void uploadFileURLtoDB(String fileURL, String fileName, String username, Long initiativeId) {
-        try {
-            User user = userRepository.findByuserName(username);
-            if (user == null) throw new UserException("Username is not found");
-            Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow(() -> new InitiativeException("Initiative not found"));
+        try{
+            User user=  userRepository.findByuserName(username);
+            if(user == null) throw new UserException("Username is not found");
+            Initiative initiative= initiativeRepository.findById(initiativeId).orElseThrow(()-> {return new InitiativeException("Initiative not found");});
             // Initiative initiative = new Initiative();
             //initiative.setId(initiativeId);
-            com.revature.initiative.model.File file = new com.revature.initiative.model.File();
+            com.revature.initiative.model.File file=new com.revature.initiative.model.File();
             com.revature.initiative.model.File fileTemp = fileRepository.findFileByFileURLAndInitiativeIdAndUploadedBy(fileURL, initiative, user);
             //com.revature.initiative.model.File fileTemp = file
-            if (fileTemp == null) {
+            if(fileTemp == null) {
                 file.setFileURL(fileURL);
                 file.setFileName(fileName);
-                file.setInitiativeId(initiative);
-                file.setUploadedBy(user);
+                file.setFileInitiativeId(initiative.getId());
+                file.setUploadedById(user.getId());
                 fileRepository.save(file);
-            } else {
-                throw new FileException("FileURL is already existed in the database");
+            }else{
+                throw new FileException("FileURL already exists the database");
             }
-        } catch (NullPointerException e) {
+        }catch(NullPointerException e){
             e.printStackTrace();
-        } catch (FileException f) {
-            throw f;
+        }catch (FileException f){
+            System.out.println(f);
         }
     }
-}
+    }
