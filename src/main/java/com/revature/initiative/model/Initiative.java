@@ -4,12 +4,14 @@ import com.revature.initiative.enums.InitiativeState;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -30,13 +32,14 @@ public class Initiative {
     @Column
     @NotBlank
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String description;
     @ManyToOne
     @JoinColumn(name = "point_of_contact", referencedColumnName = "id", insertable = false, updatable = false)
     private User pointOfContact;
     @Column(name = "point_of_contact")
     private Long pointOfContactId;
-    @Column
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'ACTIVE'")
     private InitiativeState state;
@@ -51,4 +54,7 @@ public class Initiative {
             joinColumns = @JoinColumn(name="initiative_id", insertable = false, updatable = false),
             inverseJoinColumns = @JoinColumn(name = "user_id", insertable = false, updatable = false))
     Set<User> members;
+    @OneToMany(mappedBy = "initiativeId")
+    Set<File> files;
+
 }
