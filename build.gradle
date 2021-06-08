@@ -40,6 +40,31 @@ dependencies {
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.1030'
 }
 
+apply plugin: 'jacoco'
+
+jacoco {
+	toolVersion = '0.8.1'
+}
+
+jacocoTestReport {
+	reports {
+		csv.enabled = false
+		xml.enabled = false
+		html.enabled = true
+	}
+}
+
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport
+}
+
+
+build.dependsOn jacocoTestReport
+
+
+
+
 //test {
 //	useJUnitPlatform()
 //}
