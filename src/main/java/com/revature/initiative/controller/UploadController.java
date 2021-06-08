@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 @CrossOrigin(origins = "http://localhost:4200")
 @Controller
 public class UploadController {
-    private UploadService amazonS3BucketService;
+    private final UploadService amazonS3BucketService;
 
     @Autowired
     public UploadController(UploadService amazonS3BucketService) {
@@ -18,9 +18,8 @@ public class UploadController {
     }
 
     @PostMapping(value = "/uploadFile/{username}/{id}")
-    public ResponseEntity<String> uploadFile(@RequestPart MultipartFile file, @PathVariable String username, @PathVariable String id) {
-        Long initiativeId = Long.parseLong(id);
-        String output = this.amazonS3BucketService.uploadFile(file, username, initiativeId);
+    public ResponseEntity<String> uploadFile(@RequestPart MultipartFile file, @PathVariable String username, @PathVariable Long id) {
+        String output = this.amazonS3BucketService.uploadFile(file, username, id);
         return ResponseEntity.ok(output);
 
     }

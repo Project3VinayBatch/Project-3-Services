@@ -24,14 +24,16 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Objects;
 
 @Service
 public class UploadServiceImpl implements UploadService {
 
     private AmazonS3 amazonS3;
-    private UserRepository userRepository;
-    private FileRepository fileRepository;
-    private InitiativeRepository initiativeRepository;
+    private final UserRepository userRepository;
+    private final FileRepository fileRepository;
+    private final InitiativeRepository initiativeRepository;
 
     @Autowired
     public UploadServiceImpl(UserRepository userRepository, FileRepository fileRepository, InitiativeRepository initiativeRepository) {
@@ -41,7 +43,6 @@ public class UploadServiceImpl implements UploadService {
 
     }
 
-    private String endpointUrl = "https://s3.cloudLocation.amazonaws.com";
     @Value("${bucketName}")
     private String bucketName;
     @Value("${accessKey}")
@@ -49,38 +50,41 @@ public class UploadServiceImpl implements UploadService {
     @Value("${secretKey}")
     private String secretKey;
     @Value("${aws-region}")
-    private String AwsRegion;
+    private String awsRegion;
 
     @PostConstruct
     private void initializeAmazon() {
         AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
         this.amazonS3 = AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(AwsRegion)
+                .withRegion(awsRegion)
                 .build();
     }
 
     @Override
-    public String uploadFile(MultipartFile multipartFile,String username, Long initiativeId) {
+    public String uploadFile(MultipartFile multipartFile, String username, Long initiativeId) {
         String fileURL = "";
         try {
             File file = convertMultipartFileToFile(multipartFile);
             String fileName = multipartFile.getOriginalFilename();
+            String endpointUrl = "https://s3.cloudLocation.amazonaws.com";
             fileURL = endpointUrl + "/" + bucketName + "/" + fileName;
-            uploadFileURLtoDB(fileURL,fileName, username, initiativeId);
-            //uploadFileToBucket(fileName, file);
-            file.delete();
+            uploadFileURLtoDB(fileURL, fileName, username, initiativeId);
+            uploadFileToBucket(fileName, file);
+            Files.delete(file.toPath());
         } catch (Exception e) {
             e.printStackTrace();
         }
         return fileURL;
     }
 
-    private File convertMultipartFileToFile(MultipartFile file) throws IOException {
-        File convertedFile = new File(file.getOriginalFilename());
-        FileOutputStream fos = new FileOutputStream(convertedFile);
-        fos.write(file.getBytes());
-        fos.close();
+    private File convertMultipartFileToFile(MultipartFile file) {
+        File convertedFile = new File(Objects.requireNonNull(file.getOriginalFilename()));
+        try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
+            fos.write(file.getBytes());
+        } catch (IOException e) {
+            throw new FileException("Error when converting multipart file");
+        }
         return convertedFile;
     }
 
@@ -92,28 +96,28 @@ public class UploadServiceImpl implements UploadService {
 
     @Override
     public void uploadFileURLtoDB(String fileURL, String fileName, String username, Long initiativeId) {
-        try{
-            User user=  userRepository.findByuserName(username);
-            if(user == null) throw new UserException("Username is not found");
-            Initiative initiative= initiativeRepository.findById(initiativeId).orElseThrow(()-> {return new InitiativeException("Initiative not found");});
+        try {
+            User user = userRepository.findByuserName(username);
+            if (user == null) throw new UserException("Username is not found");
+            Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow(() -> new InitiativeException("Initiative not found"));
             // Initiative initiative = new Initiative();
             //initiative.setId(initiativeId);
-            com.revature.initiative.model.File file=new com.revature.initiative.model.File();
+            com.revature.initiative.model.File file = new com.revature.initiative.model.File();
             com.revature.initiative.model.File fileTemp = fileRepository.findFileByFileURLAndInitiativeIdAndUploadedBy(fileURL, initiative, user);
             //com.revature.initiative.model.File fileTemp = file
-            if(fileTemp == null) {
+            if (fileTemp == null) {
                 file.setFileURL(fileURL);
                 file.setFileName(fileName);
                 file.setFileInitiativeId(initiative.getId());
                 file.setUploadedById(user.getId());
                 fileRepository.save(file);
-            }else{
+            } else {
                 throw new FileException("FileURL already exists the database");
             }
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
-        }catch (FileException f){
-            System.out.println(f);
+        } catch (FileException f) {
+            throw f;
         }
     }
-    }
+}
