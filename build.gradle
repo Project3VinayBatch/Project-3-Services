@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.3.11.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.example.app'
@@ -40,31 +41,16 @@ dependencies {
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.1030'
 }
 
-apply plugin: 'jacoco'
-
-jacoco {
-	toolVersion = '0.8.1'
-}
-
 jacocoTestReport {
 	reports {
-		csv.enabled = false
-		xml.enabled = false
-		html.enabled = true
+		xml.enabled false
+		csv.enabled false
+		html.enabled true
 	}
 }
 
 test {
 	useJUnitPlatform()
-	finalizedBy jacocoTestReport
+	finalizedBy jacocoTestReport // report is always generated after tests
 }
 
-
-build.dependsOn jacocoTestReport
-
-
-
-
-//test {
-//	useJUnitPlatform()
-//}
