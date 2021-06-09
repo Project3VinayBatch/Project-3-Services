@@ -7,6 +7,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserInitiativesRepository extends JpaRepository<UserInitiative, Long> {
     UserInitiative findByinitiativeIdAndUserId(Long initiativeId, Long userId);
-
-    void deleteByinitiativeIdAndUserId(Long initiativeId, Long userId);
 }

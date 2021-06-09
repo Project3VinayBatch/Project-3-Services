@@ -10,50 +10,54 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
-public class FileServiceImpl implements FileService{
+public class FileServiceImpl implements FileService {
 
     FileRepository fileRepository;
     UserRepository userRepository;
+
     @Autowired
-    public FileServiceImpl(FileRepository fileRepository,  UserRepository userRepository) {
+    public FileServiceImpl(FileRepository fileRepository, UserRepository userRepository) {
         this.fileRepository = fileRepository;
         this.userRepository = userRepository;
     }
-    private static FileDTO FileMapDTO(File ent){
-        if(ent == null) return null;
-         FileDTO ret = new FileDTO();
-         ret.setId(ent.getId());
-         ret.setFileName(ent.getFileName());
-         ret.setFileUrl(ent.getFileURL());
-         ret.setUploadedBy(ent.getUploadedById());
-         ret.setInitiativeId(ent.getFileInitiativeId());
+
+    private static FileDTO fileMapDTO(File ent) {
+        if (ent == null) return null;
+        FileDTO ret = new FileDTO();
+        ret.setId(ent.getId());
+        ret.setFileName(ent.getFileName());
+        ret.setFileUrl(ent.getFileURL());
+        ret.setUploadedBy(ent.getUploadedById());
+        ret.setInitiativeId(ent.getFileInitiativeId());
         return ret;
     }
-    private static List<FileDTO> FileMapDTO(List<File> ent){
+
+    private static List<FileDTO> fileMapDTO(List<File> ent) {
         List<FileDTO> ret = new ArrayList<>();
-        for (File i: ent) ret.add(FileMapDTO(i));
+        for (File i : ent) ret.add(fileMapDTO(i));
         return ret;
     }
 
     @Override
     public List<FileDTO> getFiles() {
-        return FileMapDTO(fileRepository.findAll());
+        return fileMapDTO(fileRepository.findAll());
     }
 
     @Override
     public List<FileDTO> getFilesByUsername(String userName) {
         try {
             User user = userRepository.findByuserName(userName);
-            return FileMapDTO(fileRepository.findAllByUploadedById(user.getId()));
+            return fileMapDTO(fileRepository.findAllByUploadedById(user.getId()));
         } catch (UserException e) {
             e.printStackTrace();
         }
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<FileDTO> getFilesByInitiativeId(Long initiativeId) {
-        return FileMapDTO(fileRepository.findAllByFileInitiativeId(initiativeId));
+        return fileMapDTO(fileRepository.findAllByFileInitiativeId(initiativeId));
     }
 }

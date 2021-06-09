@@ -1,6 +1,9 @@
 package com.revature.initiative.controller;
 
 import com.revature.initiative.dto.InitiativeDTO;
+import com.revature.initiative.enums.InitiativeState;
+import com.revature.initiative.exception.InvalidTitleException;
+import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.exception.DuplicateEntity;
 import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.UserInitiativeService;
@@ -13,8 +16,8 @@ import java.util.List;
 @RestController
 public class InitiativeController {
 
-    private InitiativeService initiativeService;
-    private UserInitiativeService userInitiativeService;
+    private final InitiativeService initiativeService;
+    private final UserInitiativeService userInitiativeService;
 
     @Autowired
     public InitiativeController(InitiativeService initiativeService, UserInitiativeService userInitiativeService) {
@@ -23,8 +26,13 @@ public class InitiativeController {
     }
 
     @PostMapping("initiative")
-    public ResponseEntity<InitiativeDTO> createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
-        return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
+    public ResponseEntity<Object> createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
+        try {
+            return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
+        } catch (InvalidTitleException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @GetMapping("initiatives")
@@ -32,13 +40,28 @@ public class InitiativeController {
         return ResponseEntity.ok(initiativeService.getInitiatives());
     }
 
+    @GetMapping("initiatives/{state}")
+    public ResponseEntity<List<InitiativeDTO>> getInitiatives(@PathVariable InitiativeState state) {
+        return ResponseEntity.ok(initiativeService.getInitiatives(state));
+    }
+
+    @PostMapping("initiative/{id}/{state}")
+    public ResponseEntity<InitiativeDTO> getAllInitiatives(@PathVariable Long id, @PathVariable InitiativeState state) {
+        return ResponseEntity.ok(initiativeService.setInitiativeState(id, state));
+    }
+
     @PatchMapping("updatepoc")
-    public ResponseEntity<InitiativeDTO> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
-        return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle(), initiativeDTO.getPointOfContact()));
+    public ResponseEntity<Object> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
+        try {
+            return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle(), initiativeDTO.getPointOfContact()));
+        } catch (UserNotFoundException | InvalidTitleException e) {
+            return ResponseEntity.badRequest()
+                    .body(e.getMessage());
+        }
     }
 
     @PostMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity<Object> signUp(long userId, long initiativeId) {
+    public ResponseEntity<Object> signUp(@PathVariable Long userId, @PathVariable Long initiativeId) {
         try {
             userInitiativeService.signUp(userId, initiativeId);
         } catch (DuplicateEntity duplicateEntity) {
@@ -49,7 +72,7 @@ public class InitiativeController {
     }
 
     @DeleteMapping("initiative/signup/{userId}/{initiativeId}")
-    public ResponseEntity<Object> signOff(long userId, long initiativeId) {
+    public ResponseEntity<Object> signOff(@PathVariable Long userId, @PathVariable Long initiativeId) {
         userInitiativeService.remove(userId, initiativeId);
         return ResponseEntity.ok(null);
     }
