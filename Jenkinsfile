@@ -15,4 +15,5 @@ node{
    sh  "docker rm -f project3-services || true"
   sh "docker run -t -dp 80:8080 --name project3-services project3-services:${buildNum}"
   }
+
 }

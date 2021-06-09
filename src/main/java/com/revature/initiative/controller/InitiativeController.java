@@ -1,6 +1,7 @@
 package com.revature.initiative.controller;
 
 import com.revature.initiative.dto.InitiativeDTO;
+import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.exception.DuplicateEntity;
@@ -37,6 +38,16 @@ public class InitiativeController {
     @GetMapping("initiatives")
     public ResponseEntity<List<InitiativeDTO>> getAllInitiatives() {
         return ResponseEntity.ok(initiativeService.getInitiatives());
+    }
+
+    @GetMapping("initiatives/{state}")
+    public ResponseEntity<List<InitiativeDTO>> getInitiatives(@PathVariable InitiativeState state) {
+        return ResponseEntity.ok(initiativeService.getInitiatives(state));
+    }
+
+    @PostMapping("initiative/{id}/{state}")
+    public ResponseEntity<InitiativeDTO> getAllInitiatives(@PathVariable Long id, @PathVariable InitiativeState state) {
+        return ResponseEntity.ok(initiativeService.setInitiativeState(id, state));
     }
 
     @PatchMapping("updatepoc")
