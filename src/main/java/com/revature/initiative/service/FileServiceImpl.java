@@ -1,10 +1,7 @@
 package com.revature.initiative.service;
-
 import com.revature.initiative.dto.FileDTO;
-import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.exception.UserException;
 import com.revature.initiative.model.File;
-import com.revature.initiative.model.Initiative;
 import com.revature.initiative.model.User;
 import com.revature.initiative.repository.FileRepository;
 import com.revature.initiative.repository.UserRepository;
