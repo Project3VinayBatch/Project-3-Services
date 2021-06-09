@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -77,19 +76,18 @@ public class InitiativeServiceImpl implements InitiativeService {
     @Override
     public InitiativeDTO addInitiative(InitiativeDTO init) {
         try {
+            if(init == null) throw new EmptyEntity();
             return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             throw new InvalidTitleException("ERROR: title already exists");
         }
     }
 
-    @Transactional
     @Override
     public InitiativeDTO getInitiative(long id) {
         return initiativeMapDTO(initiativeRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
-    @Transactional
     @Override
     public InitiativeDTO getInitiative(String title) {
         return initiativeMapDTO(initiativeRepository.findByTitle(title));
@@ -103,6 +101,13 @@ public class InitiativeServiceImpl implements InitiativeService {
     @Override
     public List<InitiativeDTO> getInitiatives(InitiativeState state) {
         return initiativeMapDTO(initiativeRepository.findByState(state));
+    }
+
+    @Override
+    public InitiativeDTO setInitiativeState(Long id, InitiativeState state) {
+        Initiative ent = initiativeRepository.findById(id).orElseThrow(NoSuchElementException::new);
+        ent.setState(state);
+        return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
     @Transactional
@@ -128,8 +133,8 @@ public class InitiativeServiceImpl implements InitiativeService {
         Initiative ent = initiativeRepository.findByTitle(title);
         User user = userRepository.findUserById(userId);
 
-        if(user == null) throw new UserNotFoundException("ERROR: user does not exist");
-        if(ent == null) throw new InvalidTitleException("ERROR: title does not exist");
+        if (user == null) throw new UserNotFoundException("ERROR: user does not exist");
+        if (ent == null) throw new InvalidTitleException("ERROR: title does not exist");
         ent.setPointOfContactId(userId);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
