@@ -13,5 +13,5 @@ public class InitiativeDTO {
     private String description;
     private Long pointOfContact;
     private InitiativeState state;
-    Set<User> members;
+    Set<UserDTO> members;
 }
