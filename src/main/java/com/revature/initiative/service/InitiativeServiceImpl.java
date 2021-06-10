@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class InitiativeServiceImpl implements InitiativeService {
@@ -54,15 +51,14 @@ public class InitiativeServiceImpl implements InitiativeService {
         ret.setTitle(ent.getTitle());
         ret.setDescription(ent.getDescription());
         ret.setState(ent.getState());
-        //ret.setMembers(new S);
-
-        return ret;
-    }
-
-    private static List<Initiative> initiativeMapENT(List<InitiativeDTO> ent) {
-        List<Initiative> ret = new ArrayList<>();
-
-        for (InitiativeDTO i : ent) ret.add(initiativeMapENT(i));
+        ret.setMembers(new HashSet<>());
+        for(User i: ent.getMembers()){
+            UserDTO user = new UserDTO();
+            user.setUserName(i.getUserName());
+            user.setRole(i.getRole());
+            user.setId(i.getId());
+            ret.getMembers().add(user);
+        }
 
         return ret;
     }
@@ -70,7 +66,10 @@ public class InitiativeServiceImpl implements InitiativeService {
     private static List<InitiativeDTO> initiativeMapDTO(List<Initiative> ent) {
         List<InitiativeDTO> ret = new ArrayList<>();
 
-        for (Initiative i : ent) ret.add(initiativeMapDTO(i));
+        for (Initiative i : ent) {
+            i.setMembers(null);
+            ret.add(initiativeMapDTO(i));
+        }
 
         return ret;
     }
