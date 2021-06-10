@@ -27,7 +27,7 @@ public class Initiative {
     private Long createdById;
     @Column(unique = true, nullable = false)
     private String title;
-    @Column(nullable = false)
+    @Column
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String description;
