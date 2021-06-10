@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.3.11.RELEASE'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'com.example.app'
@@ -25,6 +26,10 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	runtimeOnly 'org.postgresql:postgresql'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -37,6 +42,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 }
 
+jacocoTestReport {
+	reports {
+		xml.enabled false
+		csv.enabled false
+		html.enabled true
+	}
+}
+
 test {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport // report is always generated after tests
 }
+
