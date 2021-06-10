@@ -1,5 +1,4 @@
 package com.revature.initiative.service;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -19,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -100,11 +98,8 @@ public class UploadServiceImpl implements UploadService {
             User user = userRepository.findByuserName(username);
             if (user == null) throw new UserException("Username is not found");
             Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow(() -> new InitiativeException("Initiative not found"));
-            // Initiative initiative = new Initiative();
-            //initiative.setId(initiativeId);
             com.revature.initiative.model.File file = new com.revature.initiative.model.File();
             com.revature.initiative.model.File fileTemp = fileRepository.findFileByFileURLAndInitiativeIdAndUploadedBy(fileURL, initiative, user);
-            //com.revature.initiative.model.File fileTemp = file
             if (fileTemp == null) {
                 file.setFileURL(fileURL);
                 file.setFileName(fileName);
