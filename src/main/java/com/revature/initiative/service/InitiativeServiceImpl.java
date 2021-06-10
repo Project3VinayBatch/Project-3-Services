@@ -1,6 +1,7 @@
 package com.revature.initiative.service;
 
 import com.revature.initiative.dto.InitiativeDTO;
+import com.revature.initiative.dto.UserDTO;
 import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.exception.UserNotFoundException;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
 @Service
 public class InitiativeServiceImpl implements InitiativeService {
@@ -52,7 +54,7 @@ public class InitiativeServiceImpl implements InitiativeService {
         ret.setTitle(ent.getTitle());
         ret.setDescription(ent.getDescription());
         ret.setState(ent.getState());
-        ret.setMembers(ent.getMembers());
+        //ret.setMembers(new S);
 
         return ret;
     }
@@ -79,6 +81,7 @@ public class InitiativeServiceImpl implements InitiativeService {
             if(init == null) throw new EmptyEntity();
             return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            e.printStackTrace();
             throw new InvalidTitleException("ERROR: title already exists");
         }
     }
