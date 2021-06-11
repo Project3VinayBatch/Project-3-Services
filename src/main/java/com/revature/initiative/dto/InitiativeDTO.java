@@ -7,6 +7,7 @@ import java.util.Set;
 
 @Data
 public class InitiativeDTO {
+    private Long initiativeId;
     private Long createdBy;
     private String title;
     private String description;
