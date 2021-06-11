@@ -1,6 +1,7 @@
 import com.revature.initiative.controller.InitiativeController;
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.enums.InitiativeState;
+import com.revature.initiative.exception.DuplicateEntity;
 import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.UserInitiativeService;
@@ -11,8 +12,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class InitiativeControllerTesting {
     @Test
@@ -72,4 +72,29 @@ public class InitiativeControllerTesting {
         InitiativeDTO labRat = testSubject.getAllInitiatives(testTube,InitiativeState.COMPLETE).getBody();
         Assertions.assertNotNull(labRat);
     }
+    @Test
+    public void TestInitController5() throws DuplicateEntity {//Initiative Controller's getAllInitiative
+        InitiativeService initiativeService = mock(InitiativeService.class);
+        UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
+        InitiativeController testSubject = new InitiativeController(initiativeService,userInitiativeService);
+
+
+        ResponseEntity<Object> someEntity = testSubject.signUp(1l,2l);
+        Assertions.assertEquals(200,someEntity.getStatusCodeValue());
+        verify(userInitiativeService).signUp(1l,2l);
+
+
+    }
+    @Test
+    public void TestInitController5Catch() throws DuplicateEntity {//Initiative Controller's getAllInitiative
+        InitiativeService initiativeService = mock(InitiativeService.class);
+        UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
+        InitiativeController testSubject = new InitiativeController(initiativeService,userInitiativeService);
+
+        doThrow(new DuplicateEntity()).when(userInitiativeService).signUp(1l,2l);
+        ResponseEntity<Object> labRat = testSubject.signUp(1l,2l);
+        Assertions.assertNotNull(labRat);
+
+    }
+
 }

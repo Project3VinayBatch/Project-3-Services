@@ -19,7 +19,7 @@ public class InitServiceTesting {
 
     //-------------------------------Services
     @Test
-    public void TestInitService1()
+    public void TestAddInitService1()
     {
         Initiative guineaPig = new Initiative();
         guineaPig.setCreatedById(1l);
@@ -39,7 +39,7 @@ public class InitServiceTesting {
         Assertions.assertEquals(guineaPig.getTitle(),labRat.getTitle());
     }
     @Test
-    public void TestInitServiceThrows1()
+    public void TestAddInitServiceThrows1()
     {
         InitiativeService testSubject = new InitiativeServiceImpl(null,null);
         Assertions.assertThrows(EmptyEntity.class,()->{
@@ -48,7 +48,7 @@ public class InitServiceTesting {
 
     }
     @Test
-    public void TestInitServiceCatch1()
+    public void TestAddInitServiceCatch1()
     {
         InitiativeRepository initiativeRepository = mock(InitiativeRepository.class);
         when(initiativeRepository.save(any(Initiative.class))).thenThrow(mock(org.springframework.dao.DataIntegrityViolationException.class));
@@ -57,6 +57,45 @@ public class InitServiceTesting {
         Assertions.assertThrows(InvalidTitleException.class,()->{
             testSubject.addInitiative(mock(InitiativeDTO.class));
         });
+    }
+
+    @Test
+    public void TestGetInitService()
+    {
+        Initiative guineaPig = new Initiative();
+        guineaPig.setCreatedById(1l);
+        guineaPig.setPointOfContactId(1l);
+        guineaPig.setTitle("Big boss");
+        guineaPig.setDescription("This is a sea urchin");
+        guineaPig.setState(InitiativeState.COMPLETE);
+        guineaPig.setMembers(new HashSet<>());
+
+        long guineaPig2 = 1l;
+        InitiativeRepository initiativeRepository = mock(InitiativeRepository.class);
+        InitiativeService testSubject = new InitiativeServiceImpl(initiativeRepository,null);
+        when(initiativeRepository.findById(guineaPig2)).thenReturn(java.util.Optional.of(guineaPig));
+        InitiativeDTO labRat = testSubject.getInitiative(guineaPig2);
+
+        Assertions.assertEquals(guineaPig.getTitle(),labRat.getTitle());
+    }
+    @Test
+    public void TestGetInitService2()
+    {
+        Initiative guineaPig = new Initiative();
+        guineaPig.setCreatedById(1l);
+        guineaPig.setPointOfContactId(1l);
+        guineaPig.setTitle("Big boss");
+        guineaPig.setDescription("This is a sea urchin");
+        guineaPig.setState(InitiativeState.COMPLETE);
+        guineaPig.setMembers(new HashSet<>());
+
+        String guineaPig2 = "Big boss";
+        InitiativeRepository initiativeRepository = mock(InitiativeRepository.class);
+        InitiativeService testSubject = new InitiativeServiceImpl(initiativeRepository,null);
+        when(initiativeRepository.findByTitle(guineaPig2)).thenReturn(guineaPig);
+        InitiativeDTO labRat = testSubject.getInitiative(guineaPig2);
+
+        Assertions.assertEquals(guineaPig.getTitle(),labRat.getTitle());
     }
 
 }
