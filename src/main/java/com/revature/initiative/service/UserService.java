@@ -5,6 +5,11 @@ import com.revature.initiative.model.User;
 
 public interface UserService {
     UserDTO getUser(Long userId);
+    UserDTO findUserById(Long userId);
+    UserDTO findUserByUsername(String username);
 
     UserDTO addUser(User user);
+
+    UserDTO mapTokenUserDTO(User ent);
+    User mapToUser(UserDTO treeBeard);
 }

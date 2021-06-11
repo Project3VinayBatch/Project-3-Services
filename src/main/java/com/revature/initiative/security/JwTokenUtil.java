@@ -1,5 +1,6 @@
 package com.revature.initiative.security;
 
+import com.revature.initiative.dto.UserDTO;
 import com.revature.initiative.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -48,12 +49,12 @@ public class JwTokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(User user) {
+    public String generateToken(UserDTO user) {
         return Jwts.builder()
                 .setIssuer("Revature Strategic Initiatives")
                 .setSubject("" + user.getId())
                 //.claim("userid", user.getId())
-                .claim("userName", user.getUserName())
+                .claim("userName", user.getUsername())
                 .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
