@@ -15,7 +15,7 @@ public class UploadControllerTesting {
         //Creating a mock upload services and naming it amazonS3BucketService
         UploadService amazonS3BucketService = mock(UploadService.class);
 
-        //Creating an Upload Controll and calling it Test
+        //Creating an Upload Control and calling it Test
         UploadController testSubject = new UploadController(amazonS3BucketService);
         when(amazonS3BucketService.uploadFile(null, null,null )).thenReturn("this fails");
 
