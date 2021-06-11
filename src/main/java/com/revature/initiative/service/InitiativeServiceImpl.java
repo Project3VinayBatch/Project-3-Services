@@ -57,7 +57,7 @@ public class InitiativeServiceImpl implements InitiativeService {
         ret.setFiles(new HashSet<>());
         for (User i : ent.getMembers()) {
             UserDTO user = new UserDTO();
-            user.setUserName(i.getUserName());
+            user.setUsername(i.getUsername());
             user.setRole(i.getRole());
             user.setId(i.getId());
             ret.getMembers().add(user);
@@ -135,7 +135,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     @Override
     public InitiativeDTO setInitiativePOC(long initId, String username) {
         Initiative ent = initiativeRepository.findById(initId).orElseThrow(NoSuchElementException::new);
-        ent.setPointOfContactId(userRepository.findByuserName(username).getId());
+        ent.setPointOfContactId(userRepository.findByUsername(username).getId());
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
@@ -157,7 +157,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     public InitiativeDTO setInitiativePOC(String title, String username) {
         Initiative ent = initiativeRepository.findByTitle(title);
         if (ent == null) return null;
-        ent.setPointOfContactId(userRepository.findByuserName(username).getId());
+        ent.setPointOfContactId(userRepository.findByUsername(username).getId());
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 

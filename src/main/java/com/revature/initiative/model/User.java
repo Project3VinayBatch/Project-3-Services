@@ -16,8 +16,11 @@ import java.util.Set;
 public class User {
     @Id
     private Long id;
+    /**
+     * Username is ONE word!
+     */
     @Column(nullable = false)
-    private String userName;
+    private String username;
     @Column
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'USER'")

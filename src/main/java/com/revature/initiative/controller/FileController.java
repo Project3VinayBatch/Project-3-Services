@@ -34,5 +34,4 @@ public class FileController {
     public ResponseEntity<List<FileDTO>> getAllInitiatives(@PathVariable Long initiativeId) {
         return ResponseEntity.ok(fileService.getFilesByInitiativeId(initiativeId));
     }
-
 }
