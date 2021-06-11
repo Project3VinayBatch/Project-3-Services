@@ -49,7 +49,7 @@ public class FileServiceImpl implements FileService {
     @Override
     public List<FileDTO> getFilesByUsername(String userName) {
         try {
-            User user = userRepository.findByuserName(userName);
+            User user = userRepository.findByUsername(userName);
             return fileMapDTO(fileRepository.findAllByUploadedById(user.getId()));
         } catch (UserException e) {
             e.printStackTrace();

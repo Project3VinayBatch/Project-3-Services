@@ -9,6 +9,7 @@ import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.UserInitiativeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class InitiativeController {
     }
 
     @PostMapping("initiative")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Object> createInitiative(@RequestBody InitiativeDTO initiativeDTO) {
         try {
             return ResponseEntity.ok(initiativeService.addInitiative(initiativeDTO));
@@ -40,17 +42,29 @@ public class InitiativeController {
         return ResponseEntity.ok(initiativeService.getInitiatives());
     }
 
+    @GetMapping("initiatives/{id}")
+    public ResponseEntity<InitiativeDTO> getInitiativeById(@PathVariable Long initiativeId) {
+        return ResponseEntity.ok(initiativeService.getInitiative(initiativeId));
+    }
+
+    @GetMapping("initiatives/{title}")
+    public ResponseEntity<InitiativeDTO> getInitiativeById(@PathVariable String title) {
+        return ResponseEntity.ok(initiativeService.getInitiative(title));
+    }
+
     @GetMapping("initiatives/{state}")
     public ResponseEntity<List<InitiativeDTO>> getInitiatives(@PathVariable InitiativeState state) {
         return ResponseEntity.ok(initiativeService.getInitiatives(state));
     }
 
     @PostMapping("initiative/{id}/{state}")
-    public ResponseEntity<InitiativeDTO> getAllInitiatives(@PathVariable Long id, @PathVariable InitiativeState state) {
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public ResponseEntity<InitiativeDTO> setInitiativeState(@PathVariable Long id, @PathVariable InitiativeState state) {
         return ResponseEntity.ok(initiativeService.setInitiativeState(id, state));
     }
 
     @PatchMapping("updatepoc")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public ResponseEntity<Object> updateInitiativePOC(@RequestBody InitiativeDTO initiativeDTO) {
         try {
             return ResponseEntity.ok(initiativeService.setInitiativePOC(initiativeDTO.getTitle(), initiativeDTO.getPointOfContact()));

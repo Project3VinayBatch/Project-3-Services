@@ -1,10 +1,11 @@
 package com.revature.initiative.security;
 
+import com.revature.initiative.dto.UserDTO;
+import com.revature.initiative.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -14,12 +15,16 @@ import java.util.function.Function;
 
 @Component
 public class JwTokenUtil {
-    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    public static final long JWT_TOKEN_VALIDITY = 5L * 60L * 60L;
     private Key secretKey;
 
     @PostConstruct
     public void init() {
         this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+    }
+
+    public Key getSecretKey() {
+        return this.secretKey;
     }
 
     public String getIdFromToken(String token) {
@@ -44,10 +49,13 @@ public class JwTokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(UserDTO user) {
         return Jwts.builder()
                 .setIssuer("Revature Strategic Initiatives")
-                .setSubject(authentication.getName())
+                .setSubject("" + user.getId())
+                //.claim("userid", user.getId())
+                .claim("userName", user.getUsername())
+                .claim("role", user.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(this.secretKey)
