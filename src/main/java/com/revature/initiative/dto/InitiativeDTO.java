@@ -1,7 +1,6 @@
 package com.revature.initiative.dto;
 
 import com.revature.initiative.enums.InitiativeState;
-import com.revature.initiative.model.User;
 import lombok.Data;
 
 import java.util.Set;
@@ -14,4 +13,5 @@ public class InitiativeDTO {
     private Long pointOfContact;
     private InitiativeState state;
     Set<UserDTO> members;
+    Set<FileDTO> files;
 }

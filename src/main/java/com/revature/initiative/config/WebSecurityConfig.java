@@ -72,9 +72,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         response.getWriter().write(mapper.writeValueAsString(Collections.singletonMap("accessToken", token)));
     }
 
-    private void authenticationEntryPoint( HttpServletRequest request, HttpServletResponse response,
-                                           AuthenticationException authException ) throws IOException {
-        response.setStatus( HttpServletResponse.SC_UNAUTHORIZED );
-        response.getWriter().write( mapper.writeValueAsString( Collections.singletonMap( "error", "Unauthenticated" ) ) );
+    private void authenticationEntryPoint(HttpServletRequest request, HttpServletResponse response,
+                                          AuthenticationException authException) throws IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.getWriter().write(mapper.writeValueAsString(Collections.singletonMap("error", "Unauthenticated")));
     }
 }

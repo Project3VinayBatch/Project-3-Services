@@ -5,5 +5,6 @@ import com.revature.initiative.model.User;
 
 public interface UserService {
     UserDTO getUser(Long userId);
+
     UserDTO addUser(User user);
 }
