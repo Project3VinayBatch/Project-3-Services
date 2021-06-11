@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 
 @Component
 public class TokenFilter extends OncePerRequestFilter {
@@ -37,19 +39,23 @@ public class TokenFilter extends OncePerRequestFilter {
                 Jws<Claims> claimsJws = Jwts.parser()
                         .setSigningKey(jwtTokenUtil.getSecretKey())
                         .parseClaimsJws(token);
+                String role_prefix = "ROLE_";
+                Claims body = claimsJws.getBody();
+                //String uid = body.getSubject();
+                String username = body.get("userName").toString();
+                String role = (String) body.get("role");
+                role = role_prefix + role;
 
-//                Claims body = claimsJws.getBody();
-//                String uid = body.getSubject();
-//                String username = body.get("userName").toString();
-//                String role = body.get("role");
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority((String) role);
+
+                Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
 
             } catch (JwtException e) {
                 throw new IllegalStateException("token cannot be trusted");
             }
-            Authentication authentication = jwtProvider.getAuth(token);
-            if (authentication != null) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            //jwtProvider.getAuth(token);
+
         }
         filterChain.doFilter(request, response);
     }
