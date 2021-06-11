@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     public UserDTO addUser(User user) {
         UserDTO ret = mapTokenUserDTO(userRepository.findUserById(user.getId()));
 
-        if(ret == null) {
+        if (ret == null) {
             return mapTokenUserDTO(userRepository.save(user));
         } else {
             return ret;

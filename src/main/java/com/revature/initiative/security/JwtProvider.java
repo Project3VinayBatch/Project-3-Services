@@ -19,7 +19,7 @@ import java.util.Map;
 public class JwtProvider {
 
     private Key secretKey;
-    private JwTokenUtil jwTokenUtil;
+    private final JwTokenUtil jwTokenUtil;
     private final Map<String, Authentication> cache = new HashMap<>();
     private final UserService userService;
 

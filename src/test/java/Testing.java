@@ -107,7 +107,7 @@ public class Testing {
         InitiativeController testSubject = new InitiativeController(initiativeService,userInitiativeService);
         long testTube= 21;
         when(initiativeService.setInitiativeState(testTube,InitiativeState.COMPLETE)).thenReturn(new InitiativeDTO());
-        InitiativeDTO labRat = testSubject.getAllInitiatives(testTube,InitiativeState.COMPLETE).getBody();
+        InitiativeDTO labRat = testSubject.setInitiativeState(testTube,InitiativeState.COMPLETE).getBody();
         Assertions.assertNotNull(labRat);
     }
 

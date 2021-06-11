@@ -1,11 +1,13 @@
 package com.revature.initiative.service;
 
+import com.revature.initiative.dto.FileDTO;
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.dto.UserDTO;
 import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.exception.EmptyEntity;
+import com.revature.initiative.model.File;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.model.User;
 import com.revature.initiative.repository.InitiativeRepository;
@@ -14,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class InitiativeServiceImpl implements InitiativeService {
@@ -54,15 +53,22 @@ public class InitiativeServiceImpl implements InitiativeService {
         ret.setTitle(ent.getTitle());
         ret.setDescription(ent.getDescription());
         ret.setState(ent.getState());
-        //ret.setMembers(new S);
-
-        return ret;
-    }
-
-    private static List<Initiative> initiativeMapENT(List<InitiativeDTO> ent) {
-        List<Initiative> ret = new ArrayList<>();
-
-        for (InitiativeDTO i : ent) ret.add(initiativeMapENT(i));
+        ret.setMembers(new HashSet<>());
+        ret.setFiles(new HashSet<>());
+        for (User i : ent.getMembers()) {
+            UserDTO user = new UserDTO();
+            user.setUserName(i.getUserName());
+            user.setRole(i.getRole());
+            user.setId(i.getId());
+            ret.getMembers().add(user);
+        }
+        for (File i : ent.getFiles()) {
+            FileDTO file = new FileDTO();
+            file.setFileName(i.getFileName());
+            file.setFileUrl(i.getFileURL());
+            file.setUploadedBy(i.getUploadedById());
+            ret.getFiles().add(file);
+        }
 
         return ret;
     }
@@ -70,7 +76,11 @@ public class InitiativeServiceImpl implements InitiativeService {
     private static List<InitiativeDTO> initiativeMapDTO(List<Initiative> ent) {
         List<InitiativeDTO> ret = new ArrayList<>();
 
-        for (Initiative i : ent) ret.add(initiativeMapDTO(i));
+        for (Initiative i : ent) {
+            i.setFiles(new HashSet<>());
+            i.setMembers(new HashSet<>());
+            ret.add(initiativeMapDTO(i));
+        }
 
         return ret;
     }
@@ -78,7 +88,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     @Override
     public InitiativeDTO addInitiative(InitiativeDTO init) {
         try {
-            if(init == null) throw new EmptyEntity();
+            if (init == null) throw new EmptyEntity();
             return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             e.printStackTrace();
