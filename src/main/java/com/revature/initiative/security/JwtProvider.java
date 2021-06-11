@@ -1,6 +1,7 @@
 package com.revature.initiative.security;
 
 import com.revature.initiative.dto.UserDTO;
+import com.revature.initiative.enums.Role;
 import com.revature.initiative.model.User;
 import com.revature.initiative.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +25,28 @@ public class JwtProvider {
     }
 
     public String generateToken(Authentication authentication) {
+        String token;
+
         OAuth2User principal = (OAuth2User) authentication.getPrincipal();
         Long id = Long.parseLong(authentication.getName());
         String name = principal.getAttribute("login");
 
-        User user = new User();
-        user.setId(id);
-        user.setUserName(name);
+        UserDTO storedUser = userService.findUserById(id);
+        if (storedUser != null) {
+            token = jwTokenUtil.generateToken(storedUser);
+        } else {
+            UserDTO user = new UserDTO();
+            user.setId(id);
+            user.setUsername(name);
+            user.setRole(Role.USER);
 
-        UserDTO userDTO = userService.addUser(user);
-        user.setRole(userDTO.getRole());
+            User somebody = userService.mapToUser(user);
 
-        String token = jwTokenUtil.generateToken(user);
+            userService.addUser(somebody);
+
+            token = jwTokenUtil.generateToken(user);
+        }
+
         cache.put(token, authentication);
         return token;
     }

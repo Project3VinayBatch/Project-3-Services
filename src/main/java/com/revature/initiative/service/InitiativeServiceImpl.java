@@ -51,6 +51,7 @@ public class InitiativeServiceImpl implements InitiativeService {
         if (ent == null) return null;
         InitiativeDTO ret = new InitiativeDTO();
 
+        ret.setInitiativeId(ent.getId());
         ret.setCreatedBy(ent.getCreatedById());
         ret.setPointOfContact(ent.getPointOfContactId());
         ret.setTitle(ent.getTitle());
@@ -60,7 +61,7 @@ public class InitiativeServiceImpl implements InitiativeService {
         ret.setFiles(new HashSet<>());
         for (User i : ent.getMembers()) {
             UserDTO user = new UserDTO();
-            user.setUserName(i.getUserName());
+            user.setUsername(i.getUsername());
             user.setRole(i.getRole());
             user.setId(i.getId());
             ret.getMembers().add(user);
@@ -146,7 +147,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     @Override
     public InitiativeDTO setInitiativePOC(long initId, String username) {
         Initiative ent = initiativeRepository.findById(initId).orElseThrow(NoSuchElementException::new);
-        ent.setPointOfContactId(userRepository.findByuserName(username).getId());
+        ent.setPointOfContactId(userRepository.findByUsername(username).getId());
         logger.info("Initiative POC set with [ Initiative ID: {}, Username: {} ]", initId, username);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
@@ -176,7 +177,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     public InitiativeDTO setInitiativePOC(String title, String username) {
         Initiative ent = initiativeRepository.findByTitle(title);
         if (ent == null) return null;
-        ent.setPointOfContactId(userRepository.findByuserName(username).getId());
+        ent.setPointOfContactId(userRepository.findByUsername(username).getId());
         logger.info("Initiative POC set with [ Title: {}, Username: {} ]", title, username);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }

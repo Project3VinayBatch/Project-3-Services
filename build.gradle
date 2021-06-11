@@ -40,11 +40,11 @@ dependencies {
 	runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.10.7'
 	implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.11.1030'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
 	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2', version: '2.1.1.RELEASE'
 	configurations {
 		compile.exclude group: "org.springframework.boot", module: 'spring-boot-starter-logging'
 	}
+
 }
 
 jacocoTestReport {

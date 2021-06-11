@@ -9,7 +9,7 @@ import java.util.Set;
 @Data
 public class UserDTO {
     private Long id;
-    private String userName;
+    private String username;
     private Role role;
     Set<InitiativeDTO> initiatives;
     List<FileDTO> files;

@@ -104,7 +104,7 @@ public class UploadServiceImpl implements UploadService {
     @Override
     public void uploadFileURLtoDB(String fileURL, String fileName, String username, Long initiativeId) {
         try {
-            User user = userRepository.findByuserName(username);
+            User user = userRepository.findByUsername(username);
             if (user == null) throw new UserException("Username is not found");
             Initiative initiative = initiativeRepository.findById(initiativeId).orElseThrow(() -> new InitiativeException("Initiative not found"));
             com.revature.initiative.model.File file = new com.revature.initiative.model.File();
