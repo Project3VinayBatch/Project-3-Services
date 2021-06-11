@@ -3,22 +3,16 @@ package com.revature.initiative.security;
 import com.revature.initiative.dto.UserDTO;
 import com.revature.initiative.model.User;
 import com.revature.initiative.service.UserService;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.security.Key;
 import java.util.HashMap;
 import java.util.Map;
 
 @Component
 public class JwtProvider {
-
-    private Key secretKey;
     private final JwTokenUtil jwTokenUtil;
     private final Map<String, Authentication> cache = new HashMap<>();
     private final UserService userService;
@@ -27,11 +21,6 @@ public class JwtProvider {
     public JwtProvider(JwTokenUtil jwTokenUtil, UserService userService) {
         this.jwTokenUtil = jwTokenUtil;
         this.userService = userService;
-    }
-
-    @PostConstruct
-    public void init() {
-        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
 
     public String generateToken(Authentication authentication) {
