@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 public class FileController {
 
-    private FileService fileService;
+    private final FileService fileService;
 
     @Autowired
     public FileController(FileService fileService) {
@@ -34,5 +34,4 @@ public class FileController {
     public ResponseEntity<List<FileDTO>> getAllInitiatives(@PathVariable Long initiativeId) {
         return ResponseEntity.ok(fileService.getFilesByInitiativeId(initiativeId));
     }
-
 }

@@ -15,12 +15,12 @@ import java.util.Set;
 @Data
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    /**
+     * Username is ONE word!
+     */
     @Column(nullable = false)
-    private String userName;
-    @Column(nullable = false)
-    private String password;
+    private String username;
     @Column
     @Enumerated(EnumType.STRING)
     @ColumnDefault("'USER'")
