@@ -39,6 +39,7 @@ public class InitiativeController {
     public ResponseEntity<List<InitiativeDTO>> getAllInitiatives() {
         return ResponseEntity.ok(initiativeService.getInitiatives());
     }
+
     @GetMapping("initiatives/{id}")
     public ResponseEntity<InitiativeDTO> getInitiativeById(@PathVariable Long initiativeId) {
         return ResponseEntity.ok(initiativeService.getInitiative(initiativeId));

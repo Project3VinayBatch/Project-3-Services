@@ -1,11 +1,13 @@
 package com.revature.initiative.service;
 
+import com.revature.initiative.dto.FileDTO;
 import com.revature.initiative.dto.InitiativeDTO;
 import com.revature.initiative.dto.UserDTO;
 import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.exception.EmptyEntity;
+import com.revature.initiative.model.File;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.model.User;
 import com.revature.initiative.repository.InitiativeRepository;
@@ -52,12 +54,20 @@ public class InitiativeServiceImpl implements InitiativeService {
         ret.setDescription(ent.getDescription());
         ret.setState(ent.getState());
         ret.setMembers(new HashSet<>());
-        for(User i: ent.getMembers()){
+        ret.setFiles(new HashSet<>());
+        for (User i : ent.getMembers()) {
             UserDTO user = new UserDTO();
             user.setUserName(i.getUserName());
             user.setRole(i.getRole());
             user.setId(i.getId());
             ret.getMembers().add(user);
+        }
+        for (File i : ent.getFiles()) {
+            FileDTO file = new FileDTO();
+            file.setFileName(i.getFileName());
+            file.setFileUrl(i.getFileURL());
+            file.setUploadedBy(i.getUploadedById());
+            ret.getFiles().add(file);
         }
 
         return ret;
@@ -67,7 +77,8 @@ public class InitiativeServiceImpl implements InitiativeService {
         List<InitiativeDTO> ret = new ArrayList<>();
 
         for (Initiative i : ent) {
-            i.setMembers(null);
+            i.setFiles(new HashSet<>());
+            i.setMembers(new HashSet<>());
             ret.add(initiativeMapDTO(i));
         }
 
@@ -77,7 +88,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     @Override
     public InitiativeDTO addInitiative(InitiativeDTO init) {
         try {
-            if(init == null) throw new EmptyEntity();
+            if (init == null) throw new EmptyEntity();
             return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             e.printStackTrace();

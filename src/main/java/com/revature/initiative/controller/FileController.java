@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 public class FileController {
 
-    private FileService fileService;
+    private final FileService fileService;
 
     @Autowired
     public FileController(FileService fileService) {
