@@ -15,6 +15,8 @@ import com.revature.initiative.model.User;
 import com.revature.initiative.repository.FileRepository;
 import com.revature.initiative.repository.InitiativeRepository;
 import com.revature.initiative.repository.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,7 @@ public class UploadServiceImpl implements UploadService {
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
     private final InitiativeRepository initiativeRepository;
+    private static final Logger logger = LogManager.getLogger(UploadServiceImpl.class);
 
     @Autowired
     public UploadServiceImpl(UserRepository userRepository, FileRepository fileRepository, InitiativeRepository initiativeRepository) {
@@ -73,8 +76,10 @@ public class UploadServiceImpl implements UploadService {
             uploadFileToBucket(fileName, file);
             Files.delete(file.toPath());
         } catch (Exception e) {
+            logger.warn("ERROR: File not uploaded with information [ Username: {}, Initiative ID: {} ]", username, initiativeId);
             e.printStackTrace();
         }
+        logger.info("File successfully uploaded with information [ Username: {}, Initiative ID: {} ]", username, initiativeId);
         return fileURL;
     }
 
@@ -83,16 +88,18 @@ public class UploadServiceImpl implements UploadService {
         try (FileOutputStream fos = new FileOutputStream(convertedFile)) {
             fos.write(file.getBytes());
         } catch (IOException e) {
+            logger.warn("ERROR: multipart file not converted");
             throw new FileException("Error when converting multipart file");
         }
+        logger.info("Multipart file successfully converted");
         return convertedFile;
     }
 
     private void uploadFileToBucket(String fileName, File file) {
         amazonS3.putObject(new PutObjectRequest(bucketName, fileName, file)
                 .withCannedAcl(CannedAccessControlList.PublicRead));
+        logger.info("File successfully uploaded with [ Filename: {} ]", fileName);
     }
-
 
     @Override
     public void uploadFileURLtoDB(String fileURL, String fileName, String username, Long initiativeId) {
@@ -109,12 +116,16 @@ public class UploadServiceImpl implements UploadService {
                 file.setUploadedById(user.getId());
                 fileRepository.save(file);
             } else {
+                logger.warn("File already exists in database with: [ File URL: {} ]", fileURL);
                 throw new FileException("FileURL already exists the database");
             }
         } catch (NullPointerException e) {
+            logger.warn("NullPointerException in uploadFileURLtoDB");
             e.printStackTrace();
         } catch (FileException f) {
+            logger.warn("FileException in uploadFileURLtoDB");
             throw f;
         }
+        logger.info("File successfully added to database with information [ File URL: {}, File Name: {}, Username: {}, Initiative ID: {} ]", fileURL, fileName, username, initiativeId);
     }
 }

@@ -12,6 +12,8 @@ import com.revature.initiative.model.Initiative;
 import com.revature.initiative.model.User;
 import com.revature.initiative.repository.InitiativeRepository;
 import com.revature.initiative.repository.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +25,7 @@ public class InitiativeServiceImpl implements InitiativeService {
 
     private final InitiativeRepository initiativeRepository;
     private final UserRepository userRepository;
+    private static final Logger logger = LogManager.getLogger(InitiativeServiceImpl.class);
 
     @Autowired
     public InitiativeServiceImpl(InitiativeRepository initiativeRepository, UserRepository userRepository) {
@@ -89,30 +92,36 @@ public class InitiativeServiceImpl implements InitiativeService {
     public InitiativeDTO addInitiative(InitiativeDTO init) {
         try {
             if (init == null) throw new EmptyEntity();
+            logger.info("Initiative added with [ Title: {} ]", init.getTitle());
             return initiativeMapDTO(initiativeRepository.save(initiativeMapENT(init)));
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
             e.printStackTrace();
+            logger.info("Initiative already exists with [ Title: {} ]", init.getTitle());
             throw new InvalidTitleException("ERROR: title already exists");
         }
     }
 
     @Override
     public InitiativeDTO getInitiative(long id) {
+        logger.info("Initiative retrieved with [ Id: {} ]", id);
         return initiativeMapDTO(initiativeRepository.findById(id).orElseThrow(NoSuchElementException::new));
     }
 
     @Override
     public InitiativeDTO getInitiative(String title) {
+        logger.info("Initiative retrieved with [ Title: {} ]", title);
         return initiativeMapDTO(initiativeRepository.findByTitle(title));
     }
 
     @Override
     public List<InitiativeDTO> getInitiatives() {
+        logger.info("All initiatives retrieved");
         return initiativeMapDTO(initiativeRepository.findAll());
     }
 
     @Override
     public List<InitiativeDTO> getInitiatives(InitiativeState state) {
+        logger.info("Initiative retrieved with [ State: {} ]", state);
         return initiativeMapDTO(initiativeRepository.findByState(state));
     }
 
@@ -120,6 +129,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     public InitiativeDTO setInitiativeState(Long id, InitiativeState state) {
         Initiative ent = initiativeRepository.findById(id).orElseThrow(NoSuchElementException::new);
         ent.setState(state);
+        logger.info("Initiative retrieved with [ State: {} ]", state);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
@@ -128,6 +138,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     public InitiativeDTO setInitiativePOC(long initId, long userId) {
         Initiative ent = initiativeRepository.findById(initId).orElseThrow(NoSuchElementException::new);
         ent.setPointOfContactId(userId);
+        logger.info("Initiative POC set with [ Initiative ID: {}, User ID: {} ]", initId, userId);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
@@ -136,6 +147,7 @@ public class InitiativeServiceImpl implements InitiativeService {
     public InitiativeDTO setInitiativePOC(long initId, String username) {
         Initiative ent = initiativeRepository.findById(initId).orElseThrow(NoSuchElementException::new);
         ent.setPointOfContactId(userRepository.findByuserName(username).getId());
+        logger.info("Initiative POC set with [ Initiative ID: {}, Username: {} ]", initId, username);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
@@ -146,9 +158,16 @@ public class InitiativeServiceImpl implements InitiativeService {
         Initiative ent = initiativeRepository.findByTitle(title);
         User user = userRepository.findUserById(userId);
 
-        if (user == null) throw new UserNotFoundException("ERROR: user does not exist");
-        if (ent == null) throw new InvalidTitleException("ERROR: title does not exist");
+        if (user == null) {
+            logger.info("ERROR: Initiative POC not set - user does not exist [ Title: {}, User ID: {} ]", title, userId);
+            throw new UserNotFoundException("ERROR: user does not exist");
+        }
+        if (ent == null) {
+            logger.info("ERROR: Initiative POC not set - title does not exist [ Title: {}, User ID: {} ]", title, userId);
+            throw new InvalidTitleException("ERROR: title does not exist");
+        }
         ent.setPointOfContactId(userId);
+        logger.info("Initiative POC set with [ Initiative Title: {}, User ID: {} ]", title, userId);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
@@ -158,16 +177,19 @@ public class InitiativeServiceImpl implements InitiativeService {
         Initiative ent = initiativeRepository.findByTitle(title);
         if (ent == null) return null;
         ent.setPointOfContactId(userRepository.findByuserName(username).getId());
+        logger.info("Initiative POC set with [ Title: {}, Username: {} ]", title, username);
         return initiativeMapDTO(initiativeRepository.save(ent));
     }
 
     @Override
     public void remInitiative(long id) {
+        logger.info("Initiative removed with [ Initiative ID: {} ]", id);
         initiativeRepository.deleteById(id);
     }
 
     @Override
     public void remInitiative(String title) {
+        logger.info("Initiative removed with [ Title: {} ]", title);
         initiativeRepository.deleteByTitle(title);
     }
 }

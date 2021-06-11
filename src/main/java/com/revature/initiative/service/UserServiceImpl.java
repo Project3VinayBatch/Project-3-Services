@@ -4,6 +4,8 @@ import com.revature.initiative.dto.UserDTO;
 import com.revature.initiative.enums.Role;
 import com.revature.initiative.model.User;
 import com.revature.initiative.repository.UserRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private static final Logger logger = LogManager.getLogger(UserServiceImpl.class);
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -19,6 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO getUser(Long userId) {
+        logger.info("User retrieved with [ UserID: {} ]", userId);
         return mapTokenUserDTO(userRepository.findUserById(userId));
     }
 
@@ -27,8 +31,10 @@ public class UserServiceImpl implements UserService {
         UserDTO ret = mapTokenUserDTO(userRepository.findUserById(user.getId()));
 
         if (ret == null) {
+            logger.info("User added with [ UserID: {} ]", user.getId());
             return mapTokenUserDTO(userRepository.save(user));
         } else {
+            logger.info("User returned with [ UserID: {} ]", user.getId());
             return ret;
         }
     }
