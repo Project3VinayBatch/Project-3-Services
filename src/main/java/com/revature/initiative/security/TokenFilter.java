@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,12 +22,10 @@ import java.util.Collections;
 @Component
 public class TokenFilter extends OncePerRequestFilter {
 
-    private final JwtProvider jwtProvider;
     private final JwTokenUtil jwtTokenUtil;
 
     @Autowired
-    public TokenFilter(JwtProvider jwtProvider, JwTokenUtil jwtTokenUtil) {
-        this.jwtProvider = jwtProvider;
+    public TokenFilter(JwTokenUtil jwtTokenUtil) {
         this.jwtTokenUtil = jwtTokenUtil;
     }
 
@@ -39,14 +38,13 @@ public class TokenFilter extends OncePerRequestFilter {
                 Jws<Claims> claimsJws = Jwts.parser()
                         .setSigningKey(jwtTokenUtil.getSecretKey())
                         .parseClaimsJws(token);
-                String role_prefix = "ROLE_";
+                String rolePrefix = "ROLE_";
                 Claims body = claimsJws.getBody();
-                //String uid = body.getSubject();
                 String username = body.get("userName").toString();
                 String role = (String) body.get("role");
-                role = role_prefix + role;
+                role = rolePrefix + role;
 
-                SimpleGrantedAuthority authority = new SimpleGrantedAuthority((String) role);
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role);
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -54,7 +52,6 @@ public class TokenFilter extends OncePerRequestFilter {
             } catch (JwtException e) {
                 throw new IllegalStateException("token cannot be trusted");
             }
-            //jwtProvider.getAuth(token);
 
         }
         filterChain.doFilter(request, response);
