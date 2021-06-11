@@ -4,14 +4,20 @@ import com.revature.initiative.exception.EmptyEntity;
 import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.repository.InitiativeRepository;
+import com.revature.initiative.repository.UserInitiativesRepository;
+import com.revature.initiative.repository.UserRepository;
 import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.InitiativeServiceImpl;
+import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -96,6 +102,19 @@ public class InitServiceTesting {
         InitiativeDTO labRat = testSubject.getInitiative(guineaPig2);
 
         Assertions.assertEquals(guineaPig.getTitle(),labRat.getTitle());
+    }
+
+    @Test
+    public void TestGetInitsService(){
+
+        InitiativeRepository initiativeRepository = mock(InitiativeRepository.class);
+        UserRepository userRepository = mock(UserRepository.class);
+        InitiativeService testSubject = new InitiativeServiceImpl(initiativeRepository,userRepository);
+
+        when(initiativeRepository.findAll()).thenReturn(new ArrayList<>());
+        List<InitiativeDTO> labRats = testSubject.getInitiatives();
+        Assertions.assertEquals(0,labRats.size());
+
     }
 
 }
