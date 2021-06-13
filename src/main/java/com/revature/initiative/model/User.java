@@ -30,4 +30,16 @@ public class User {
     @OneToMany(mappedBy = "uploadedBy")
     List<File> files;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User that = (User) o;
+        return this.hashCode() == that.hashCode();
+    }
+
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 }
