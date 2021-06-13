@@ -56,20 +56,32 @@ public class InitiativeServiceImpl implements InitiativeService {
         ret.setState(ent.getState());
         ret.setMembers(new HashSet<>());
         ret.setFiles(new HashSet<>());
-        for (User i : ent.getMembers()) {
-            UserDTO user = new UserDTO();
-            user.setUsername(i.getUsername());
-            user.setRole(i.getRole());
-            user.setId(i.getId());
-            ret.getMembers().add(user);
+
+        if(ent.getMembers() == null){
+            System.out.println("easy");
+        }else{
+            for (User i : ent.getMembers()) {
+                UserDTO user = new UserDTO();
+                user.setUsername(i.getUsername());
+                user.setRole(i.getRole());
+                user.setId(i.getId());
+                ret.getMembers().add(user);
+            }
         }
-        for (File i : ent.getFiles()) {
+
+        if(ent.getFiles() == null){
             FileDTO file = new FileDTO();
-            file.setFileName(i.getFileName());
-            file.setFileUrl(i.getFileURL());
-            file.setUploadedBy(i.getUploadedById());
             ret.getFiles().add(file);
+        }else{
+            for (File i : ent.getFiles()) {
+                FileDTO file = new FileDTO();
+                file.setFileName(i.getFileName());
+                file.setFileUrl(i.getFileURL());
+                file.setUploadedBy(i.getUploadedById());
+                ret.getFiles().add(file);
+            }
         }
+
 
         return ret;
     }

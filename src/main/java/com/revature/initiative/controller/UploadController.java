@@ -17,8 +17,8 @@ public class UploadController {
         this.amazonS3BucketService = amazonS3BucketService;
     }
 
-    @PostMapping(value = "/uploadFile/{username}/{id}")
-    public ResponseEntity<String> uploadFile(@RequestPart MultipartFile file, @PathVariable String username, @PathVariable Long id) {
+    @PostMapping("/uploadFile/{username}/{id}")
+    public ResponseEntity<String> uploadFile(@RequestPart("file") MultipartFile file, @PathVariable String username, @PathVariable Long id) {
         String output = this.amazonS3BucketService.uploadFile(file, username, id);
         return ResponseEntity.ok(output);
 
