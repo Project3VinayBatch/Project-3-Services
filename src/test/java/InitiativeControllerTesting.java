@@ -6,7 +6,6 @@ import com.revature.initiative.exception.InvalidTitleException;
 import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.UserInitiativeService;
-import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
