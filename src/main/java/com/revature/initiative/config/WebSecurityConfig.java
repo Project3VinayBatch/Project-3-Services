@@ -52,7 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .successHandler(this::successHandler).and()
                 .exceptionHandling().authenticationEntryPoint(this::authenticationEntryPoint);
-        http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
+       http.addFilterBefore(tokenFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Bean

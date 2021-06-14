@@ -64,16 +64,16 @@ public class InitiativeControllerTesting {
         Assertions.assertEquals(0,labRats.size());
     }
 
-    @Test
-    public void TestInitController4(){//Initiative Controller's getInitiative with InitiativeState and Id as long
-        InitiativeService initiativeService = mock(InitiativeService.class);
-        UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
-        InitiativeController testSubject = new InitiativeController(initiativeService,userInitiativeService);
-        long testTube= 21;
-        when(initiativeService.setInitiativeState(testTube,InitiativeState.COMPLETE)).thenReturn(new InitiativeDTO());
-        InitiativeDTO labRat = testSubject.getAllInitiatives(testTube,InitiativeState.COMPLETE).getBody();
-        Assertions.assertNotNull(labRat);
-    }
+//    @Test
+//    public void TestInitController4(){//Initiative Controller's getInitiative with InitiativeState and Id as long
+//        InitiativeService initiativeService = mock(InitiativeService.class);
+//        UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
+//        InitiativeController testSubject = new InitiativeController(initiativeService,userInitiativeService);
+//        long testTube= 21;
+//        when(initiativeService.setInitiativeState(testTube,InitiativeState.COMPLETE)).thenReturn(new InitiativeDTO());
+//        InitiativeDTO labRat = testSubject.getAllInitiatives(testTube,InitiativeState.COMPLETE).getBody();
+//        Assertions.assertNotNull(labRat);
+//    }
     @Test
     public void TestInitController5() throws DuplicateEntity {//Initiative Controller's getAllInitiative
         InitiativeService initiativeService = mock(InitiativeService.class);
