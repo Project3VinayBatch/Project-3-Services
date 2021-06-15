@@ -17,6 +17,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,6 +31,7 @@ import java.util.Collections;
 @PropertySource(value = "secret.properties", ignoreResourceNotFound = true)
 @EnableWebSecurity
 @Configuration
+@EnableSwagger2
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -44,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().cors().and().authorizeRequests()
                 .antMatchers("/oauth2/**", "/login**").permitAll()
+                //.antMatchers("/swagger-resources/**", "/swagger-ui/**", "*.html", "/swagger-ui.html", "/swagger-ui*", "/api/v1/swagger.json").hasAnyRole() //documentation
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
@@ -78,5 +84,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                           AuthenticationException authException) throws IOException {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.getWriter().write(mapper.writeValueAsString(Collections.singletonMap("error", "Unauthenticated")));
+    }
+
+    //access documentation at: http://localhost:8080/swagger-ui.html#/
+    @Bean
+    public Docket generateUserApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.revature.initiative"))
+                .build();
     }
 }
