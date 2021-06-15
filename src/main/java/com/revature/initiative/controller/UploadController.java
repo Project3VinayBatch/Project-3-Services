@@ -21,6 +21,5 @@ public class UploadController {
     public ResponseEntity<String> uploadFile(@RequestPart MultipartFile file, @PathVariable String username, @PathVariable Long id) {
         String output = this.amazonS3BucketService.uploadFile(file, username, id);
         return ResponseEntity.ok(output);
-
     }
 }

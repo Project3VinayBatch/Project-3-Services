@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 
 @Component
@@ -52,7 +53,6 @@ public class TokenFilter extends OncePerRequestFilter {
             } catch (JwtException e) {
                 throw new IllegalStateException("token cannot be trusted");
             }
-
         }
         filterChain.doFilter(request, response);
     }
