@@ -1,7 +1,6 @@
 package com.revature.initiative.security;
 
 import com.revature.initiative.dto.UserDTO;
-import com.revature.initiative.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -53,7 +52,6 @@ public class JwTokenUtil {
         return Jwts.builder()
                 .setIssuer("Revature Strategic Initiatives")
                 .setSubject("" + user.getId())
-                //.claim("userid", user.getId())
                 .claim("userName", user.getUsername())
                 .claim("role", user.getRole())
                 .setIssuedAt(new Date())
