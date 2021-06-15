@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin("http://localhost:4200")
 public class InitiativeController {
 
     private final InitiativeService initiativeService;
@@ -42,9 +43,9 @@ public class InitiativeController {
         return ResponseEntity.ok(initiativeService.getInitiatives());
     }
 
-    @GetMapping("initiatives/{id}")
-    public ResponseEntity<InitiativeDTO> getInitiativeById(@PathVariable Long initiativeId) {
-        return ResponseEntity.ok(initiativeService.getInitiative(initiativeId));
+    @GetMapping("initiatives/id/{id}")
+    public ResponseEntity<InitiativeDTO> getInitiativeById(@PathVariable Long id) {
+        return ResponseEntity.ok(initiativeService.getInitiative(id));
     }
 
     @GetMapping("initiatives/{title}")

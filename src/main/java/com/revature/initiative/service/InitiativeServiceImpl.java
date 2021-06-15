@@ -75,6 +75,7 @@ public class InitiativeServiceImpl implements InitiativeService {
         }
 
         return ret;
+
     }
 
     private static List<InitiativeDTO> initiativeMapDTO(List<Initiative> ent) {
