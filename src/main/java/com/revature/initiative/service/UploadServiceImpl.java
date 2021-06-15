@@ -1,10 +1,6 @@
 package com.revature.initiative.service;
 
-import com.amazonaws.auth.AWSCredentials;
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.revature.initiative.exception.FileException;
@@ -18,11 +14,9 @@ import com.revature.initiative.repository.UserRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,36 +26,20 @@ import java.util.Objects;
 @Service
 public class UploadServiceImpl implements UploadService {
 
-    private AmazonS3 amazonS3;
+    private final String bucketName;
+    private final AmazonS3 amazonS3;
     private final UserRepository userRepository;
     private final FileRepository fileRepository;
     private final InitiativeRepository initiativeRepository;
     private static final Logger logger = LogManager.getLogger(UploadServiceImpl.class);
 
     @Autowired
-    public UploadServiceImpl(UserRepository userRepository, FileRepository fileRepository, InitiativeRepository initiativeRepository) {
+    public UploadServiceImpl(UserRepository userRepository, FileRepository fileRepository, InitiativeRepository initiativeRepository, S3Provider provider) {
         this.userRepository = userRepository;
         this.fileRepository = fileRepository;
         this.initiativeRepository = initiativeRepository;
-
-    }
-
-    @Value("${bucketName}")
-    private String bucketName;
-    @Value("${accessKey}")
-    private String accessKey;
-    @Value("${secretKey}")
-    private String secretKey;
-    @Value("${aws-region}")
-    private String awsRegion;
-
-    @PostConstruct
-    private void initializeAmazon() {
-        AWSCredentials credentials = new BasicAWSCredentials(this.accessKey, this.secretKey);
-        this.amazonS3 = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withRegion(awsRegion)
-                .build();
+        amazonS3 = provider.provide();
+        bucketName = provider.getBucket();
     }
 
     @Override
@@ -78,6 +56,7 @@ public class UploadServiceImpl implements UploadService {
         } catch (Exception e) {
             logger.warn("ERROR: File not uploaded with information [ Username: {}, Initiative ID: {} ]", username, initiativeId);
             e.printStackTrace();
+            fileURL = "FileError";
         }
         logger.info("File successfully uploaded with information [ Username: {}, Initiative ID: {} ]", username, initiativeId);
         return fileURL;
@@ -119,9 +98,6 @@ public class UploadServiceImpl implements UploadService {
                 logger.warn("File already exists in database with: [ File URL: {} ]", fileURL);
                 throw new FileException("FileURL already exists the database");
             }
-        } catch (NullPointerException e) {
-            logger.warn("NullPointerException in uploadFileURLtoDB");
-            e.printStackTrace();
         } catch (FileException f) {
             logger.warn("FileException in uploadFileURLtoDB");
             throw f;
@@ -129,3 +105,4 @@ public class UploadServiceImpl implements UploadService {
         logger.info("File successfully added to database with information [ File URL: {}, File Name: {}, Username: {}, Initiative ID: {} ]", fileURL, fileName, username, initiativeId);
     }
 }
+
