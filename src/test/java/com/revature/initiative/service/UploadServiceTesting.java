@@ -18,6 +18,6 @@ public class UploadServiceTesting {
         userRepository = mock(UserRepository.class);
         fileRepository = mock(FileRepository.class);
         initiativeRepository = mock(InitiativeRepository.class);
-        uploadService = new UploadServiceImpl();
+       // uploadService = new UploadServiceImpl();
     }
 }
