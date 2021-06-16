@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 
-@CrossOrigin(origins = "http://localhost:4200")
 @Controller
 public class UploadController {
     private final UploadService amazonS3BucketService;
@@ -25,7 +24,7 @@ public class UploadController {
     @PostMapping(value = "/uploadFile/{username}/{id}")
     public ResponseEntity<String> uploadFile(@RequestPart MultipartFile file, @PathVariable String username, @PathVariable Long id) {
         String output = this.amazonS3BucketService.uploadFile(file, username, id);
-        return ResponseEntity.ok("aceite");
 
+        return ResponseEntity.ok(output);
     }
 }
