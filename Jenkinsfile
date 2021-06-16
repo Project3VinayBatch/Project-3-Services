@@ -13,7 +13,7 @@ node{
     
   stage("Run docker image"){
    sh  "docker rm -f project3-services || true"
-  sh "docker run -t -dp 80:8080 --env-file ./secret.properties --name project3-services project3-services:${buildNum}"
+  sh "docker run -t -dp 80:8080 --env-file /secret.properties --name project3-services project3-services:${buildNum}"
   }
 
 }
