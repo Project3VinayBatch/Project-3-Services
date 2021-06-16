@@ -7,7 +7,6 @@ import com.revature.initiative.exception.UserNotFoundException;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.service.InitiativeService;
 import com.revature.initiative.service.UserInitiativeService;
-import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 public class InitiativeControllerTesting {
     @Test
-    public void TestInitController1CreateInit() {//Initiative Controller's create initiative
+    public void testInitController1CreateInit() {//Initiative Controller's create initiative
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeDTO guineaPig = new InitiativeDTO();
@@ -31,7 +30,7 @@ public class InitiativeControllerTesting {
     }
 
     @Test
-    public void TestInitController1ForCatch() {//Catch for above test
+    public void testInitController1ForCatch() {//Catch for above test
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeDTO guineaPig = new InitiativeDTO();
@@ -43,7 +42,7 @@ public class InitiativeControllerTesting {
         Assertions.assertEquals(400, labRat.getStatusCodeValue());
     }
     @Test
-    public void TestInitController1GetInit(){
+    public void testInitController1GetInit(){
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeController testSubject = new InitiativeController(initiativeService,userInitiativeService);
@@ -53,7 +52,7 @@ public class InitiativeControllerTesting {
     }
 
     @Test
-    public void TestInitController2GetInits() {//Initiative Controller's getInitiatives
+    public void testInitController2GetInits() {//Initiative Controller's getInitiatives
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeController testSubject = new InitiativeController(initiativeService, userInitiativeService);
@@ -64,7 +63,7 @@ public class InitiativeControllerTesting {
     }
 
     @Test
-    public void TestInitController3GetInit() {//Initiative Controller's getInitiative with InitiativeState
+    public void testInitController3GetInit() {//Initiative Controller's getInitiative with InitiativeState
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeController testSubject = new InitiativeController(initiativeService, userInitiativeService);
@@ -76,8 +75,9 @@ public class InitiativeControllerTesting {
 
 
 
+
     @Test
-    public void TestInitController5GetAllInits() throws DuplicateEntity {//Initiative Controller's getAllInitiative
+    public void testInitController5GetAllInits() throws DuplicateEntity {//Initiative Controller's getAllInitiative
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeController testSubject = new InitiativeController(initiativeService, userInitiativeService);
@@ -90,8 +90,9 @@ public class InitiativeControllerTesting {
 
     }
 
+
     @Test
-    public void TestInitControllersetInitiativeState()
+    public void testInitControllersetInitiativeState()
     {
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
@@ -103,7 +104,7 @@ public class InitiativeControllerTesting {
     }
 
     @Test
-    public void TestInitController5CatchGetAllInits() throws DuplicateEntity {//Initiative Controller's getAllInitiative
+    public void testInitController5CatchGetAllInits() throws DuplicateEntity {//Initiative Controller's getAllInitiative
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeController testSubject = new InitiativeController(initiativeService, userInitiativeService);
@@ -116,7 +117,7 @@ public class InitiativeControllerTesting {
 
 
     @Test
-    public void TestInitController6() {// For Init Controller's signOff
+    public void testInitController6() {// For Init Controller's signOff
 
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
@@ -128,7 +129,7 @@ public class InitiativeControllerTesting {
     }
 
     @Test
-    public void TestInitController7() {//For Init Controller updateInitiativePOC
+    public void testInitController7() {//For Init Controller updateInitiativePOC
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeController testSubject = new InitiativeController(initiativeService, userInitiativeService);
@@ -140,7 +141,7 @@ public class InitiativeControllerTesting {
     }
 
     @Test
-    public void TestInitController7ForCatch() { //catch for method above
+    public void testInitController7ForCatch() { //catch for method above
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeDTO guineaPig = new InitiativeDTO();
@@ -157,7 +158,7 @@ public class InitiativeControllerTesting {
     }
 
     @Test
-    public void TestInitController7ForCatch2() { //continuation for method above
+    public void testInitController7ForCatch2() { //continuation for method above
         InitiativeService initiativeService = mock(InitiativeService.class);
         UserInitiativeService userInitiativeService = mock(UserInitiativeService.class);
         InitiativeDTO guineaPig = new InitiativeDTO();
