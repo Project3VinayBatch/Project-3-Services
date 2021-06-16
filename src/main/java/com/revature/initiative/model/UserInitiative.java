@@ -2,8 +2,6 @@ package com.revature.initiative.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicInsert;
-import org.springframework.cglib.core.GeneratorStrategy;
 
 import javax.persistence.*;
 
