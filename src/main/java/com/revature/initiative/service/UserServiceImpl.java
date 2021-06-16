@@ -33,7 +33,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDTO findUserById(Long userId) {
+
         logger.info("User retrieved with [ UserID: {} ]", userId);
+
         return mapTokenUserDTO(userRepository.findUserById(userId));
     }
 

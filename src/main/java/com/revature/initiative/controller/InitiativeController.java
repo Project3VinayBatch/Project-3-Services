@@ -48,10 +48,7 @@ public class InitiativeController {
         return ResponseEntity.ok(initiativeService.getInitiative(id));
     }
 
-    @GetMapping("initiatives/{title}")
-    public ResponseEntity<InitiativeDTO> getInitiativeById(@PathVariable String title) {
-        return ResponseEntity.ok(initiativeService.getInitiative(title));
-    }
+
 
     @GetMapping("initiatives/{state}")
     public ResponseEntity<List<InitiativeDTO>> getInitiatives(@PathVariable InitiativeState state) {
