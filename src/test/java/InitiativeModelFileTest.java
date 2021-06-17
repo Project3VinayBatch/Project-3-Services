@@ -16,7 +16,6 @@ public class InitiativeModelFileTest {
         Assertions.assertTrue(testFile.equals(testFileDeux) && testFileDeux.equals(testFile));
         Assertions.assertTrue(testFile.hashCode() == testFileDeux.hashCode());
         Assertions.assertTrue(true, String.valueOf(testFile == (null) || testFile != testFileDeux));
-        Assertions.assertTrue(testFileDeux.getClass() != testFile.getClass());
     }
 
 }
