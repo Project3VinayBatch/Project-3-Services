@@ -33,7 +33,7 @@ public class InitiativeServiceImpl implements InitiativeService {
         this.userRepository = userRepository;
     }
 
-    private static Initiative initiativeMapENT(InitiativeDTO ent) {
+    public static Initiative initiativeMapENT(InitiativeDTO ent) {
         if (ent == null) return null;
 
         Initiative ret = new Initiative();
@@ -47,7 +47,7 @@ public class InitiativeServiceImpl implements InitiativeService {
         return ret;
     }
 
-    private static InitiativeDTO initiativeMapDTO(Initiative ent) {
+    public static InitiativeDTO initiativeMapDTO(Initiative ent) {
         if (ent == null) return null;
         InitiativeDTO ret = new InitiativeDTO();
 

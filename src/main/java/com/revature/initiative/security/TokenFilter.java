@@ -31,11 +31,11 @@ public class TokenFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String authToken = request.getHeader("Authorization");
         if (authToken != null) {
             String token = authToken.split(" ")[1];
-            try {
+
                 Jws<Claims> claimsJws = Jwts.parser()
                         .setSigningKey(jwtTokenUtil.getSecretKey())
                         .parseClaimsJws(token);
@@ -50,9 +50,7 @@ public class TokenFilter extends OncePerRequestFilter {
                 Authentication authentication = new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(authority));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            } catch (JwtException e) {
-                throw new IllegalStateException("token cannot be trusted");
-            }
+
         }
         filterChain.doFilter(request, response);
     }

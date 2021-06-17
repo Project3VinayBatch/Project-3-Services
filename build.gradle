@@ -56,7 +56,8 @@ jacocoTestReport {
 	}
 	afterEvaluate {
 		classDirectories.setFrom(files(classDirectories.files.collect {
-			fileTree(dir: it, exclude: 'com/revature/initiative/config/**')
+			fileTree(dir: it, exclude: ['com/revature/initiative/config/**', 'com/revature/initiative/*.java'])
+
 		}))
 	}
 }

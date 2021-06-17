@@ -3,13 +3,16 @@ package com.revature.initiative.service;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.revature.initiative.dto.FileDTO;
 import com.revature.initiative.dto.InitiativeDTO;
+import com.revature.initiative.dto.UserDTO;
 import com.revature.initiative.enums.InitiativeState;
 import com.revature.initiative.enums.Role;
 import com.revature.initiative.exception.EmptyEntity;
+import com.revature.initiative.model.File;
 import com.revature.initiative.model.Initiative;
 import com.revature.initiative.model.User;
 import com.revature.initiative.repository.InitiativeRepository;
 import com.revature.initiative.repository.UserRepository;
+import io.jsonwebtoken.lang.Assert;
 import io.swagger.models.auth.In;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,10 +21,7 @@ import org.mockito.ArgumentCaptor;
 
 import java.sql.Date;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -216,5 +216,40 @@ class InitiativeServiceTest {
     void testRemInitiative() {
         testSubject.remInitiative("toasters");
         verify(initiativeRepository, times(1)).deleteByTitle("toasters");
+    }
+
+    @Test
+    void initiativeMapDTOTest(){
+        Initiative initiative = generateInit(1);
+        Set<User> user = new HashSet<>();
+        Set<File> file = new HashSet<>();
+
+        User user1 = new User();
+        File file1 = new File();
+        user1.setId(1l);
+        user1.setUsername("test");
+        user1.setRole(Role.ADMIN);
+        user.add(user1);
+
+        file1.setId(1l);
+        file1.setFileName("test");
+        file1.setFileName("test");
+
+        file.add(file1);
+        initiative.setFiles(file);
+        initiative.setMembers(user);
+        Assertions.assertFalse(InitiativeServiceImpl.initiativeMapDTO(initiative) == null);
+    }
+    @Test
+    void setInitiativePOCTest(){
+        Initiative initiative = generateInit(1);
+        User user1 = new User();
+        user1.setId(1l);
+        user1.setUsername("test");
+        user1.setRole(Role.ADMIN);
+        when(initiativeRepository.findById(anyLong())).thenReturn(Optional.of(initiative));
+        when(userRepository.findByUsername(anyString())).thenReturn(user1);
+        Assertions.assertTrue(testSubject.setInitiativePOC(1l,1l) == null);
+        Assertions.assertTrue(testSubject.setInitiativePOC(1l,"test") == null);
     }
 }

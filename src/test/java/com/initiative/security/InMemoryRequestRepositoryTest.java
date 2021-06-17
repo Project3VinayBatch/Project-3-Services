@@ -5,7 +5,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
+import javax.validation.constraints.Null;
 
 
 public class InMemoryRequestRepositoryTest {
@@ -34,5 +37,20 @@ public class InMemoryRequestRepositoryTest {
     @Test
     void saveAuthorizationRequestTest(){
         MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        //OAuth2AuthorizationRequest oauthRequest = new MockHttpServletRequest();
+
+        Assertions.assertThrows(NullPointerException.class,()->{
+            inMemoryRequestRepository.saveAuthorizationRequest(null,request,response);
+        });
+    }
+
+    @Test
+    void removeAuthorizationTest(){
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        MockHttpServletRequest requestWithParam = new MockHttpServletRequest();
+        requestWithParam.addParameter("state","test");
+        Assertions.assertFalse(inMemoryRequestRepository.removeAuthorizationRequest(request) != null);
+        Assertions.assertFalse(inMemoryRequestRepository.removeAuthorizationRequest(requestWithParam) != null);
     }
 }
