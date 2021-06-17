@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 public class FileServiceTesting {
 
     @Test
-    public void TestFileServiceGetFiles() {
+    public void testFileServiceGetFiles() {
 
         FileRepository fileRepository = mock(FileRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
@@ -43,7 +43,7 @@ public class FileServiceTesting {
     }
 
     @Test
-    public void TestGetFilesByInitiativeId() {
+    public void testGetFilesByInitiativeId() {
 
         FileRepository fileRepository = mock(FileRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
@@ -80,7 +80,7 @@ public class FileServiceTesting {
     }
 
     @Test
-    public void TestGetFilesByUserName(){
+    public void testGetFilesByUserName(){
 
         FileRepository fileRepository = mock(FileRepository.class);
         UserRepository userRepository = mock(UserRepository.class);
